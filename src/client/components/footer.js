@@ -15,7 +15,6 @@ export default class User extends React.Component {
          <div className="footer">
            <Container>
              <Row>
-               Zmiana u kamila
              </Row>
            </Container>
          </div>
