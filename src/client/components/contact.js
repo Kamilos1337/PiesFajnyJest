@@ -14,7 +14,7 @@ export default class User extends React.Component {
 }
      render(props){
        return(
-         <div className="">
+         <div className="Diego">
            <Container>
              <Row className="contactRow">
                <Col className="contactCOL">
