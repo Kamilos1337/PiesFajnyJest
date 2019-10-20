@@ -16,7 +16,7 @@ export default class User extends React.Component {
        return(
          <div className="">
            <Container>
-             <Row className="contactRow">
+             <Row className="contactRow status">
                <Col className="contactCOL">
                 <img className="contactIMG" src={Contact} alt="Skontaktuj się z piesfajnyjest.com"/>
                   <FormGroup className="styleInput marginTop20">
