@@ -18,7 +18,7 @@ export default class User extends React.Component {
            <Container>
              <Row className="contactRow status">
                <Col className="contactCOL">
-                Jestem olek
+
                 <img className="contactIMG" src={Contact} alt="Skontaktuj się z piesfajnyjest.com"/>
                   <FormGroup className="styleInput marginTop20">
                    <Input type="text" className="inputBor" name="contactTitle" id="contactTitle" placeholder="Podaj temat..." />
