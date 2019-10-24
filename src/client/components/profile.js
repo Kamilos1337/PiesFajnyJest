@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { Card, Row, Col, CardImg, CardText, CardBody,
@@ -14,11 +15,17 @@ import 'react-multi-carousel/lib/styles.css';
 import { BrowserRouter, Route, IndexRoute, Link } from 'react-router-dom'
 import Navbar100 from './Navbar/Navbar100';
 
+=======
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
+import { Container, Row, Col } from 'reactstrap';
+>>>>>>> Profile component
 
 export default class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+<<<<<<< HEAD
       isLoading: true,
       CurrentPage:'ustawienia',
       MainPosts:"Brak postów",
@@ -371,6 +378,18 @@ displayPostsSlider(){
            </Container>
            <NotificationContainer/>
            </div>
+=======
+
+     };
+}
+     render(props){
+       return(
+         <div className="profile">
+           <Container>
+             <Row>
+             </Row>
+           </Container>
+>>>>>>> Profile component
          </div>
        );
      }
