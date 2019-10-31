@@ -13,7 +13,7 @@
 margin-left:5px;
 }
 .rules{
-  color:#dc3545;
+  color:#F45355;
 }
 .dropdown-toggle{
 
@@ -23,10 +23,13 @@ margin-left:5px;
   color:red;
 }
 .userDrop{
-background-color:#dc3545;
+background-color:#F45355;
+}
+.PreferencjeButton{
+  margin-top:10px;
 }
 .userDrop{
-background-color:#dc3545;
+background-color:#F45355;
 }
 .notification{
   box-shadow: none !important;
@@ -90,7 +93,7 @@ background-color:#f8f8f8;
   font-weight:bold;
 }
 .notification-error{
-  background-color:#dc3545 !important;
+  background-color:#F45355 !important;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1) !important;
 }
 .formAddPost{
@@ -218,6 +221,56 @@ a:hover{
       max-height: 300px;
 
 }
+.black{
+  color:black !important;
+}
+.ProfileRow{
+  padding-bottom:5px;
+  border-bottom:2px solid #eee ;
+  text-align:center;
+  color:#F45355;
+  font-family: 'Open Sans',sans-serif;
+    font-weight: 400;
+    font-size:20px;
+}
+.profile{
+  background-image:url("./dogbackground.png");
+
+  padding-top:50px;
+}
+.profileCol{
+
+}
+.profileContainer{
+  background-color:white;
+
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+}
+.margin10{
+  margin-top:10px;
+
+}
+.ProfileItem{
+
+}
+.NoBorder{
+  border: none !important;
+}
+.ZmienHaslo{
+  width:100% !important;
+}
+.ProfilePref{
+  margin-top:20px;
+}
+.ProfileUstawienia{
+  margin-top:20px;
+}
+.btn-danger{
+  background-color:#F45355 !important;
+}
+.btn-danger:hover{
+  background-color:#CC0000 !important;
+}
 .ShareCol{
   max-width:67%;
 
@@ -308,7 +361,7 @@ padding:20px;
   margin-top:50px;
   text-align:center;
   border-radius:20px;
-  background-color:#20262e;
+  background-color:#F45355;
 }
 #contactDesc{
   min-height:150px;
@@ -341,7 +394,7 @@ margin-bottom: 0px !important;
   flex-wrap:wrap-reverse !important
 }
 .styles_gridItem__nPXhF figcaption{
-  background-color:#dc3545 !important;
+  background-color:#F45355 !important;
   opacity:0.9;
     display:none !important;
 }
@@ -443,7 +496,7 @@ margin-bottom: 0px !important;
 }
 
 .Aktualnosci{
-  background-color:#dc3545;
+  background-color:#F45355;
   padding:3px;
   border-radius: 999px;
   color:white;
@@ -469,7 +522,7 @@ height:100%;
         font-family: 'Open Sans',sans-serif;
 margin-bottom:0px !important;
         color:white;
-  background-color:#dc3545;
+  background-color:#F45355;
   padding-top:10px;
   padding-bottom:10px;
   font-weight: 600;
@@ -578,7 +631,7 @@ padding-right: 50px;
   max-width:100% !important;
 }
 .rowFluid{
-  background-color:#dc3545;
+  background-color:#F45355;
   color:white;
   margin-top:75px;
   padding-top:15px;
@@ -591,8 +644,8 @@ display:block;
   margin:0 auto;
   color:white;
   margin-top:20px;
-  border-left: 2px solid #dc3545;
-  border-right: 2px solid #dc3545;
+  border-left: 2px solid #F45355;
+  border-right: 2px solid #F45355;
 
   padding:30px;
   cursor:pointer;
@@ -678,7 +731,7 @@ font-size: 20px;
 .mainImage{
   background-size:cover;
   margin:0 auto;
-  border-top:2px solid #dc3545;
+  border-top:2px solid #F45355;
 
 
 }

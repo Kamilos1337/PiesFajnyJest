@@ -75,7 +75,7 @@ export default class InfoNav extends React.Component {
    var hours = new Date().getHours(); //Current Hours
    var min = new Date().getMinutes(); //Current Minutes
    var sec = new Date().getSeconds(); //Current Seconds
-   var FullDate = date + "." + month;
+   var FullDate = date + "." + month + "." + year;
      fetch('/api/addPost', {
      method: 'POST',
      headers: {

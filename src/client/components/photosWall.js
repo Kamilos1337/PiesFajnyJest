@@ -45,7 +45,7 @@ ShowWall(){
 })
 .then(resp => resp.json())
 .then(resp => {
-  console.log(resp);
+
   this.setState({PhotosWall:resp});
   })
 }
@@ -67,7 +67,9 @@ _handleSubmit(e) {
  if(month<10){
    month = "0"+month;
  }
-   var FullDate = date + "." + month;
+  var year = new Date().getFullYear(); //Current Year
+
+ var FullDate = date + "." + month + "." + year;
    fetch('/api/AddToWall', {
    method: 'POST',
    headers: {

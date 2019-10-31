@@ -9,6 +9,7 @@ import Footer from './footer';
 import Banner from './banner';
 import PhotosWall from './photosWall';
 import Contact from './contact';
+import Profile from './profile';
 
 class App extends React.Component {
   render(){
@@ -35,4 +36,15 @@ class addPost extends React.Component {
   }
 }
 
-export { App, addPost };
+class Konto extends React.Component {
+  render(){
+    return(
+      <div>
+      <Profile/>
+      </div>
+    );
+  }
+}
+
+
+export { App, addPost, Konto };

@@ -60,7 +60,13 @@ class LoginModal extends React.Component {
 
 
 Register(){
-
+  var date = new Date().getDate(); //Current Date
+  var month = new Date().getMonth() + 1; //Current Month
+  if(month<10){
+    month = "0"+month;
+  }
+  var year = new Date().getFullYear(); //Current Year
+  var FullDate = date + "." + month + "." + year;
   this.setState(prevState => ({infoEmail:"", infoLogin:"", infoPassword:"", CheckRegister:"", infoPasswords:"", emailColor:""}));
   fetch('/api/register', {
   method: 'POST',
@@ -73,7 +79,7 @@ Register(){
     email: this.state.email,
     password: this.state.password,
     password2: this.state.password2,
-    dateTime: new Date().getDate()
+    dateTime: FullDate
   }),
 })
 .then(resp => resp.json())

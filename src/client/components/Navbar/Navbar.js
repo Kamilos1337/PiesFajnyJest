@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import {
   Collapse,
   Navbar,
@@ -67,7 +68,7 @@ export default class MyNavbar extends User {
        <Container className="navContainer">
 
         <Navbar color="da" light expand="md">
-          <NavbarBrand href="/">  <CardImg src={Logo} className="logo" alt="Card image cap" /></NavbarBrand>
+          <NavbarBrand href="/"><CardImg src={Logo} className="logo" alt="Card image cap" /></NavbarBrand>
 
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
@@ -79,7 +80,7 @@ export default class MyNavbar extends User {
        </DropdownToggle>
        <DropdownMenu>
          <DropdownItem header>Panel użytkownika</DropdownItem>
-        <DropdownItem>Mój profil</DropdownItem>
+        <DropdownItem> <Link to="/konto" className="black">Mój profil</Link></DropdownItem>
          <DropdownItem divider />
          <DropdownItem>Dodaj ogłoszenie</DropdownItem>
          <DropdownItem>Ustawienia</DropdownItem>

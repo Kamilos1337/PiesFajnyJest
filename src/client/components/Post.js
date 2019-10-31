@@ -17,7 +17,7 @@ import { BrowserRouter, Route, IndexRoute, Link } from 'react-router-dom'
 export default class Post extends React.Component {
   constructor(props) {
     super(props);
-    this.Slider = this.Slider.bind(this);
+
     this.displayPostsSlider = this.displayPostsSlider.bind(this);
     this.LeftArrow = this.LeftArrow.bind(this);
     this.RightArrow = this.RightArrow.bind(this);
@@ -44,9 +44,6 @@ componentDidUpdate() {
   }
 }
 
-Slider(Posts){
-  console.log("DUPA");
-}
 
 displayPostsSlider(){
   fetch('/api/displayPostsSlider', {

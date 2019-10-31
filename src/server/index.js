@@ -24,7 +24,17 @@ const WallAddLimiter = rateLimit({
 
 const AddPostLimit = rateLimit({
   windowMs: 60 * 1000 * 30, // 30 minut
-  max: 1, // start blocking after 5 requests
+  max: 5, // start blocking after 5 requests
+});
+
+const ChangePassword = rateLimit({
+  windowMs: 60 * 1000 * 30, // 30 minut
+  max: 5, // start blocking after 5 requests
+});
+
+const ChangePreferences = rateLimit({
+  windowMs: 60 * 1000 * 30, // 30 minut
+  max: 5, // start blocking after 5 requests
 });
 
 var connection = mysql.createConnection({
@@ -85,6 +95,85 @@ var Login = function(email, password) {
       }
     });
   });
+}
+
+var getProfile = function(email, passUSER) {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT * FROM users WHERE email = ? and password = ?",
+    [
+      email,
+      passUSER
+    ],
+    function (error, results, fields) {
+      if (error) throw error;
+
+      if(results.length>0){
+           resolve({Info:"success", Name:results[0].name, Email:results[0].email, Created_At: results[0].created_at, ads:results[0].ads})
+          } else {
+           resolve({Info:"Zaloguj się!"})
+          }
+    });
+  });
+}
+
+var savePreferences = function(email, passUSER, ads) {
+  return new Promise(function(resolve, reject) {
+    connection.query("UPDATE users SET ads=? WHERE email=? and password=?",
+    [
+      ads,
+      email,
+      passUSER
+    ],
+    function (error, results, fields) {
+      if (error) throw error;
+      if(results){
+           resolve({Info:"success"})
+          } else {
+           resolve({Info:"error"})
+          }
+    });
+  });
+}
+
+var changePassword = function(pass1New, pass2New, oldPass1, userEmail) {
+    return new Promise(function(resolve, reject) {
+      connection.query("SELECT * FROM users WHERE email = ?",
+      [
+        userEmail,
+      ],
+      function (error, results, fields) {
+        if (error) throw error;
+        if(results.length>0){
+          var db_pass = results[0].password;
+          bcrypt.compare(oldPass1, db_pass, function(err, res) {
+            if(res) {
+              bcrypt.hash(pass1New, 10, function(err, hash) {
+                connection.query("UPDATE users SET password=? WHERE email = ?",
+                [
+                  hash,
+                  userEmail
+                ],
+                function (error, results, fields) {
+                  if (error) throw error;
+                  console.log(results);
+                  if(results){
+                    resolve({Info:"Haslo zmienione!", Pass:hash})
+                  }else{
+                    resolve({Info:"Nie udalo sie zmienic hasla!"})
+                  }
+                });
+                });
+            } else {
+             resolve({Info:"Podane hasło jest niepoprawne!"})
+            }
+          });
+        }else{
+          console.log("Problem here");
+        }
+      });
+    });
+
+
 }
 
 
@@ -255,6 +344,40 @@ app.post('/api/facebookCounts', function(req, res){
       console.log("Nie można wyświetlić ilości udostępnień: "+req.body.Link)
       });
 });
+
+app.post('/api/changePassword', ChangePassword, function(req, res){
+  changePassword(req.body.newPass1, req.body.newPass2, req.body.oldPass1, req.body.userEmail).then(function(data) {
+    console.log(data);
+    if(data.Info=="Haslo zmienione!"){
+      res.send(data);
+    }
+    if(data.Info=="Podane hasło jest niepoprawne!"){
+      res.send(data);
+    }
+
+  })
+});
+
+app.post('/api/getProfile', function(req, res){
+  getProfile(req.body.userEmail, req.body.userPass).then(function(data) {
+    if(data.Info=="success"){
+      res.send(data);
+    }else{
+      res.send({Info:"Zaloguj się!"});
+    }
+  })
+});
+
+app.post('/api/savePreferences', ChangePreferences, function(req, res){
+  savePreferences(req.body.userEmail, req.body.userPass, req.body.userAds).then(function(data) {
+    if(data.Info=="success"){
+      res.send(data);
+    }else{
+      res.send({Info:"error"});
+    }
+  })
+});
+
 app.post('/api/login', function(req, res) {
   var email = req.body.email;
   var password = req.body.password;
@@ -372,10 +495,72 @@ var displayPostsSlider = function() {
   });
 }
 
+var displayPostsSliderProfile = function(email) {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT * FROM posts WHERE userEmail=? ORDER BY id DESC",
+    [
+      email
+    ],
+    function (error, results, fields) {
+      if (error) throw error;
+      console.log(results.length);
+      if(results.length>0){
+        var MainPagePosts = [];
+        if(results.length==1){
+          for (let pw=0; pw<results.length; pw++){
+            var DescirptionText =  Buffer.from( results[pw].description, 'binary' ).toString();
+            DescirptionText = entities.decode(DescirptionText);
+            results[pw].email = entities.decode(results[pw].email)
+            results[pw].title = entities.decode(results[pw].title)
+            var PhotoText =  Buffer.from( results[pw].photo, 'binary' ).toString();
+            MainPagePosts.push({PostID:pw, Error:'', title:'Miejsce na twój przyszły post!', category: 'Twoja kategoria', voivodeship:"Twoje województwo", email:'', photo:'/src/client/dog.png', description:'Zachęcamy do pomagania psiakom. Twórz oraz udostępniaj posty, nie bój się działać!', created_at:'', link:''})
+            MainPagePosts.push({PostID:pw, Error:'', title:results[pw].title, category: results[pw].category, voivodeship:results[pw].voivodeship, email:results[pw].email, photo:PhotoText, description:DescirptionText, created_at:results[pw].created_at, link:results[pw].link})
+            MainPagePosts.push({PostID:pw, Error:'', title:'Miejsce na twój przyszły post!', category: 'Twoja kategoria', voivodeship:"Twoje województwo", email:'', photo:'/src/client/dog.png', description:'Zachęcamy do pomagania psiakom. Twórz oraz udostępniaj posty, nie bój się działać!', created_at:'', link:''})
+          }
+          resolve(MainPagePosts)
+        }else if(results.length==2){
+          for (let pw=0; pw<results.length; pw++){
+            var DescirptionText =  Buffer.from( results[pw].description, 'binary' ).toString();
+            DescirptionText = entities.decode(DescirptionText);
+            results[pw].email = entities.decode(results[pw].email)
+            results[pw].title = entities.decode(results[pw].title)
+            var PhotoText =  Buffer.from( results[pw].photo, 'binary' ).toString();
+            MainPagePosts.push({PostID:pw, Error:'', title:results[pw].title, category: results[pw].category, voivodeship:results[pw].voivodeship, email:results[pw].email, photo:PhotoText, description:DescirptionText, created_at:results[pw].created_at, link:results[pw].link})
+          }
+          MainPagePosts.push({PostID:2, Error:'', title:'Miejsce na twój przyszły post!', category: 'Twoja kategoria', voivodeship:"Twoje województwo", email:'', photo:'/src/client/dog.png', description:'Zachęcamy do pomagania psiakom. Twórz oraz udostępniaj posty, nie bój się działać!', created_at:'', link:''})
+          resolve(MainPagePosts)
+        }else{
+          for (let pw=0; pw<results.length; pw++){
+            var DescirptionText =  Buffer.from( results[pw].description, 'binary' ).toString();
+            DescirptionText = entities.decode(DescirptionText);
+            results[pw].email = entities.decode(results[pw].email)
+            results[pw].title = entities.decode(results[pw].title)
+            var PhotoText =  Buffer.from( results[pw].photo, 'binary' ).toString();
+            MainPagePosts.push({PostID:pw, Error:'', title:results[pw].title, category: results[pw].category, voivodeship:results[pw].voivodeship, email:results[pw].email, photo:PhotoText, description:DescirptionText, created_at:results[pw].created_at, link:results[pw].link})
+          }
+          resolve(MainPagePosts)
+        }
+      }else{
+        var MainPagePosts = [];
+        MainPagePosts.push({PostID:0, Error:'', title:'Miejsce na twój przyszły post!', category: 'Twoja kategoria', voivodeship:"Twoje województwo", email:'', photo:'/src/client/dog.png', description:'Zachęcamy do pomagania psiakom. Twórz oraz udostępniaj posty, nie bój się działać!', created_at:'', link:''})
+        MainPagePosts.push({PostID:1, Error:'', title:'Miejsce na twój przyszły post!', category: 'Twoja kategoria', voivodeship:"Twoje województwo", email:'', photo:'/src/client/dog.png', description:'Zachęcamy do pomagania psiakom. Twórz oraz udostępniaj posty, nie bój się działać!', created_at:'', link:''})
+        MainPagePosts.push({PostID:2, Error:'', title:'Miejsce na twój przyszły post!', category: 'Twoja kategoria', voivodeship:"Twoje województwo", email:'', photo:'/src/client/dog.png', description:'Zachęcamy do pomagania psiakom. Twórz oraz udostępniaj posty, nie bój się działać!', created_at:'', link:''})
+        resolve(MainPagePosts)
+      }
+    });
+  });
+}
+
 app.post('/api/displayPostsSlider', function(req, res) {
   displayPostsSlider().then(function(data) {
     res.send(data);
 
+  })
+});
+
+app.post('/api/displayPostsSliderProfile', function(req, res) {
+  displayPostsSliderProfile(req.body.userEmail).then(function(data) {
+    res.send(data);
   })
 });
 
