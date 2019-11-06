@@ -9,7 +9,7 @@ import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import Swipe from '../img/add-image.png';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-
+import Footer from '../footer'
 export default class InfoNav extends React.Component {
   constructor(props) {
     super(props);
@@ -283,6 +283,7 @@ export default class InfoNav extends React.Component {
 
 
       </Container>
+      <Footer/>
       <NotificationContainer/>
       </div>
     );

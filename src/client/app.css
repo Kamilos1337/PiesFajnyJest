@@ -196,6 +196,15 @@ a:hover{
 
 
 }
+.icon{
+  font-size:40px !important;
+  cursor:pointer;
+}
+.footerRow{
+  margin-top:30px;
+  color:#fff;
+
+}
 .socialIcons{
   list-style: none;
   width:32px;
@@ -206,7 +215,6 @@ a:hover{
 }
 
 .footer{
-  height: 200px;
   background-color:#20262e;
   position: absolute;
   margin-top:50px;
@@ -224,6 +232,13 @@ a:hover{
 .black{
   color:black !important;
 }
+.FooterDesc{
+  margin-top:20px;
+  padding-top:10px;
+  border-top:1px solid #fff;
+  color:#fff;
+  opacity:0.5;
+}
 .ProfileRow{
   padding-bottom:5px;
   border-bottom:2px solid #eee ;
@@ -235,7 +250,7 @@ a:hover{
 }
 .profile{
   background-image:url("./dogbackground.png");
-
+  padding-bottom:50px;
   padding-top:50px;
 }
 .profileCol{
@@ -245,6 +260,11 @@ a:hover{
   background-color:white;
 
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+}
+.redColor{color:red;
+text-transform: uppercase;
+font-size:bold;
+text-align: center;
 }
 .margin10{
   margin-top:10px;

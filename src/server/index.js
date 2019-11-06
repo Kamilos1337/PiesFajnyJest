@@ -32,6 +32,11 @@ const ChangePassword = rateLimit({
   max: 5, // start blocking after 5 requests
 });
 
+const RemovePassword = rateLimit({
+  windowMs: 60 * 1000 * 30, // 30 minut
+  max: 5, // start blocking after 5 requests
+});
+
 const ChangePreferences = rateLimit({
   windowMs: 60 * 1000 * 30, // 30 minut
   max: 5, // start blocking after 5 requests
@@ -162,6 +167,44 @@ var changePassword = function(pass1New, pass2New, oldPass1, userEmail) {
                     resolve({Info:"Nie udalo sie zmienic hasla!"})
                   }
                 });
+                });
+            } else {
+             resolve({Info:"Podane hasło jest niepoprawne!"})
+            }
+          });
+        }else{
+          console.log("Problem here");
+        }
+      });
+    });
+
+
+}
+
+var removeAccount = function(userEmail, oldPass) {
+  console.log(oldPass);
+    return new Promise(function(resolve, reject) {
+      connection.query("SELECT * FROM users WHERE email = ?",
+      [
+        userEmail,
+      ],
+      function (error, results, fields) {
+        if (error) throw error;
+        if(results.length>0){
+          var db_pass = results[0].password;
+          bcrypt.compare(oldPass, db_pass, function(err, res) {
+            if(res) {
+                connection.query("DELETE FROM users WHERE email=?;",
+                [
+                  userEmail
+                ],
+                function (error, results, fields) {
+                  if (error) throw error;
+                  if(results){
+                    resolve({Info:"Konto usunięte!"})
+                  }else{
+                    resolve({Info:"Nie udało się usunąć konta"})
+                  }
                 });
             } else {
              resolve({Info:"Podane hasło jest niepoprawne!"})
@@ -347,7 +390,6 @@ app.post('/api/facebookCounts', function(req, res){
 
 app.post('/api/changePassword', ChangePassword, function(req, res){
   changePassword(req.body.newPass1, req.body.newPass2, req.body.oldPass1, req.body.userEmail).then(function(data) {
-    console.log(data);
     if(data.Info=="Haslo zmienione!"){
       res.send(data);
     }
@@ -355,6 +397,19 @@ app.post('/api/changePassword', ChangePassword, function(req, res){
       res.send(data);
     }
 
+  })
+});
+
+app.post('/api/removeAccount', RemovePassword, function(req, res){
+  removeAccount(req.body.userEmail, req.body.removeAccount).then(function(data) {
+    if(data.Info=="Konto usunięte!"){
+      res.send(data);
+    }
+    if(data.Info=="Podane hasło jest niepoprawne!"){
+      res.send(data);
+    }
+    if(data.Info=="Nie udało się usunąć konta!")
+      res.send(data);
   })
 });
 

@@ -13,6 +13,7 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { BrowserRouter, Route, IndexRoute, Link } from 'react-router-dom'
 import Navbar100 from './Navbar/Navbar100';
+import Footer from './footer';
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 
@@ -30,7 +31,8 @@ export default class Profile extends React.Component {
       newPassword1:'',
       newPassword2:'',
       oldPass1:'',
-      isChecked: false
+      isChecked: false,
+      removeAccount:""
      };
      this.LeftArrow = this.LeftArrow.bind(this);
      this.RightArrow = this.RightArrow.bind(this);
@@ -38,6 +40,7 @@ export default class Profile extends React.Component {
      this.handleChange = this.handleChange.bind(this);
      this.changePassword = this.changePassword.bind(this);
      this.savePreferences = this.savePreferences.bind(this);
+     this.removeAccount = this.removeAccount.bind(this);
 }
 
 componentDidMount () {
@@ -115,6 +118,41 @@ savePreferences(){
   NotificationManager.error("Zbyt wiele prób zmiany preferencji, spróbuj ponownie za 30min.", "Nie udało się!");
  });
 
+}
+removeAccount(){
+  var AreYouSure = confirm("Czy na pewno chcesz usunąć swoje konto? Po naciśnieciu przycisku 'OK', twoje konto zostanie usunięte, bez możliwości przywrócenia danych.")
+  if(AreYouSure==true){
+    fetch('/api/removeAccount', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userEmail:localStorage.getItem('userEmail'),
+      removeAccount:this.state.removeAccount
+    }),
+  })
+  .then(resp => resp.json())
+  .then(resp => {
+    if(resp.Info=="Konto usunięte!"){
+      localStorage.clear();
+      window.location.href="/";
+    }
+
+    if(resp.Info=="Podane hasło jest niepoprawne!"){
+      NotificationManager.error("Aktualne hasło jest nieprawidłowe, proszę spróbuj ponownie!", "Nie udało się!");
+    }
+
+    if(resp.Info=="Nie udało się usunąć konta!"){
+      NotificationManager.error("Nie udało się usunąć konta, proszę skontaktuj się z nami poprzez formularz kontaktowy!", "Nie udało się!");
+    }
+
+
+    }).catch(function() {
+      NotificationManager.error("Zbyt wiele prób usunięcia konta, spróbuj ponownie za 30min.", "Nie udało się!");
+     });
+  }
 }
 
 changePassword(){
@@ -369,7 +407,23 @@ displayPostsSlider(){
                  <span className="ProfileItem">Usunięcie konta</span>
                  </Col>
                </Row>
+
+               <Row className="ProfileUstawienia">
+                  <Col>
+                 <FormGroup>
+                    <p className="redColor">Potwierdź hasło</p>
+                    <Input type="password" id="removeAccount" value={this.state.value} onChange={this.handleChange} placeholder="Stare hasło" autoComplete="new-password" />
+                  </FormGroup>
+                  </Col>
+                  <Col>
+                  <p className="redColor">Nie można cofnąć tej czynności!</p>
+                    <Button  className="ZmienHaslo" id="removeAccount" onClick={this.removeAccount} color="danger" >Usuń konto</Button>
+
+                  </Col>
+               </Row>
+
            </Container>
+                  <Footer/>
            <NotificationContainer/>
            </div>
 
