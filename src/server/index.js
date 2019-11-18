@@ -27,6 +27,11 @@ const AddPostLimit = rateLimit({
   max: 5, // start blocking after 5 requests
 });
 
+const ChangePostLimit = rateLimit({
+  windowMs: 60 * 1000 * 30, // 30 minut
+  max: 10, // start blocking after 5 requests
+});
+
 const ChangePassword = rateLimit({
   windowMs: 60 * 1000 * 30, // 30 minut
   max: 5, // start blocking after 5 requests
@@ -42,6 +47,11 @@ const ChangePreferences = rateLimit({
   max: 5, // start blocking after 5 requests
 });
 
+const RegisterLimit = rateLimit({
+  windowMs: 60 * 1000 * 30, // 30 minut
+  max: 5, // start blocking after 5 requests
+});
+
 var connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
@@ -51,20 +61,27 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-var Register = function(name, email, password, password2, dateTime) {
+var Register = function(name, email, password, password2, dateTime, RegisterAds) {
   return new Promise(function(resolve, reject) {
     /*stuff using username, password*/
     bcrypt.hash(password, 10, function(err, hash) {
       var sql = 'SELECT COUNT(*) AS checkEmail FROM users WHERE email = "'+email+'"'
       connection.query(sql, function (error, results, fields) {
-        if (error) throw error;
+        if (error) console.log(error);
         var checkEmail = results[0].checkEmail;
         if(checkEmail>0){
           resolve("Podany email jest zajęty!")
         }else{
-          var sql = 'INSERT INTO users (name,  password, email, created_at) VALUES ("'+name+'", "'+hash+'", "'+email+'", "'+dateTime+'") '
-          connection.query(sql, function (error, results, fields) {
-            if (error) throw error;
+          connection.query("INSERT INTO users(name,  password, email, created_at, ads) VALUES (?, ?, ?, ?, ?)",
+          [
+            name,
+            hash,
+            email,
+            dateTime,
+            RegisterAds
+          ],
+          function (error, results, fields) {
+            if (error) console.log(error);
             resolve("Rejestracja się udała!")
           });
         }
@@ -84,8 +101,8 @@ var Login = function(email, password) {
       email
     ],
     function (error, results, fields) {
-      if (error) throw error;
-
+      if (error) console.log(error);
+      if(results){
       if(results.length>0){
         var db_pass = results[0].password;
         bcrypt.compare(password, db_pass, function(err, res) {
@@ -98,6 +115,7 @@ var Login = function(email, password) {
       }else{
         resolve("Podany email nie istnieje!")
       }
+    }
     });
   });
 }
@@ -110,13 +128,14 @@ var getProfile = function(email, passUSER) {
       passUSER
     ],
     function (error, results, fields) {
-      if (error) throw error;
-
+      if (error) console.log(error);
+      if(results){
       if(results.length>0){
            resolve({Info:"success", Name:results[0].name, Email:results[0].email, Created_At: results[0].created_at, ads:results[0].ads})
           } else {
            resolve({Info:"Zaloguj się!"})
           }
+        }
     });
   });
 }
@@ -130,7 +149,7 @@ var savePreferences = function(email, passUSER, ads) {
       passUSER
     ],
     function (error, results, fields) {
-      if (error) throw error;
+      if (error) console.log(error);
       if(results){
            resolve({Info:"success"})
           } else {
@@ -147,7 +166,8 @@ var changePassword = function(pass1New, pass2New, oldPass1, userEmail) {
         userEmail,
       ],
       function (error, results, fields) {
-        if (error) throw error;
+        if (error) console.log(error);
+        if(results){
         if(results.length>0){
           var db_pass = results[0].password;
           bcrypt.compare(oldPass1, db_pass, function(err, res) {
@@ -159,7 +179,7 @@ var changePassword = function(pass1New, pass2New, oldPass1, userEmail) {
                   userEmail
                 ],
                 function (error, results, fields) {
-                  if (error) throw error;
+                  if (error) console.log(error);
                   console.log(results);
                   if(results){
                     resolve({Info:"Haslo zmienione!", Pass:hash})
@@ -175,6 +195,7 @@ var changePassword = function(pass1New, pass2New, oldPass1, userEmail) {
         }else{
           console.log("Problem here");
         }
+      }
       });
     });
 
@@ -182,14 +203,14 @@ var changePassword = function(pass1New, pass2New, oldPass1, userEmail) {
 }
 
 var removeAccount = function(userEmail, oldPass) {
-  console.log(oldPass);
     return new Promise(function(resolve, reject) {
       connection.query("SELECT * FROM users WHERE email = ?",
       [
         userEmail,
       ],
       function (error, results, fields) {
-        if (error) throw error;
+        if (error) console.log(error);
+        if(results){
         if(results.length>0){
           var db_pass = results[0].password;
           bcrypt.compare(oldPass, db_pass, function(err, res) {
@@ -199,8 +220,28 @@ var removeAccount = function(userEmail, oldPass) {
                   userEmail
                 ],
                 function (error, results, fields) {
-                  if (error) throw error;
+                  if (error) console.log(error);
                   if(results){
+                    connection.query("SELECT photo FROM posts WHERE userEmail=?;",
+                    [
+                      userEmail
+                    ],
+                    function (error, results, fields) {
+                      if (error) console.log(error);
+                      for(var pp =0; pp<results.length; pp++){
+                        try {
+                            fs.unlinkSync("./src/client/upload/"+results[pp].photo)
+                          //file removed
+                        } catch(err) {
+                          console.error(err)
+                        }
+                      }
+                    });
+                    connection.query("DELETE FROM posts WHERE userEmail=?;",
+                    [
+                      userEmail
+                    ],
+                    function (error, results, fields) { });
                     resolve({Info:"Konto usunięte!"})
                   }else{
                     resolve({Info:"Nie udało się usunąć konta"})
@@ -213,6 +254,7 @@ var removeAccount = function(userEmail, oldPass) {
         }else{
           console.log("Problem here");
         }
+      }
       });
     });
 
@@ -226,7 +268,7 @@ var ShowPost = function(postPath) {
 
     var sql = 'SELECT * FROM posts WHERE link = "'+postPath+'"'
     connection.query(sql, function (error, results, fields) {
-      if (error) throw error;
+      if (error) console.log(error);
 
       if(results.length==1){
         var postTitle = results[0].title;
@@ -261,7 +303,7 @@ var RandomPost = function() {
 
     var sql = 'SELECT title, link, photo FROM posts ORDER BY RAND() LIMIT 1'
     connection.query(sql, function (error, results, fields) {
-      if (error) throw error;
+      if (error) console.log(error);
 
       if(results.length==1){
         var RandomTitle = results[0].title;
@@ -276,11 +318,99 @@ var RandomPost = function() {
 }
 
 var AddPost = function(title, category, email, photo, date, description, voivodeship, userLogin, userEmail, randomLink) {
+
+  var RandomName = "PiesFajnyJest_" + randomstring.generate(15) +".jpg";
+
+  var imageBuffer = decodeBase64Image(photo);
+  fs.writeFile('./src/client/upload/'+RandomName, imageBuffer.data, function(err) {
+
+  });
+
   return new Promise(function(resolve, reject) {
-    var sql = 'INSERT into posts (title, category, voivodeship, email, photo, description, userLogin, userEmail, link, created_at) VALUES ("'+title+'", "'+category+'", "'+voivodeship+'", "'+email+'", "'+photo+'", "'+description+'", "'+userLogin+'", "'+userEmail+'", "'+randomLink+'", "'+date+'")'
-    connection.query(sql, function (error, results, fields) {
-      if (error) throw error;
+    connection.query("INSERT INTO posts (title, category, voivodeship, email, photo, description, userLogin, userEmail, link, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [
+      title,
+      category,
+      voivodeship,
+      email,
+      RandomName,
+      description,
+      userLogin,
+      userEmail,
+      randomLink,
+      date
+    ],
+    function (error, results, fields) {
+      if (error) console.log(error);
     });
+  });
+}
+
+var ChangePost = function(title, category, email, photo, description, voivodeship, link, emailUser, passUser, photoChanged, newPhoto) {
+  var dont = true;
+  if(photoChanged){
+    if(photoChanged==true){
+      var RandomName = "PiesFajnyJest_" + randomstring.generate(15) +".jpg";
+      dont = false;
+    }else{
+      var RandomName = photo;
+    }
+  }else{
+    var RandomName = photo;
+  }
+
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT * FROM users WHERE email=? AND password=?",
+    [
+      emailUser,
+      passUser
+    ],
+    function (error, results, fields) {
+      if (error) console.log(error);
+      if(results){
+        if(results.length>0){
+          connection.query("UPDATE posts SET title=?, category=?, voivodeship=?, email=?, photo=?, description=? WHERE userEmail=? AND link=?",
+          [
+            title,
+            category,
+            voivodeship,
+            email,
+            RandomName,
+            description,
+            emailUser,
+            link
+          ],
+          function (error, results, fields) {
+            if (error) console.log(error);
+            console.log(results.changedRows);
+            if(results.changedRows){
+              if(results.changedRows>0){
+                if(dont==false){
+                  try {
+                  fs.unlinkSync("./src/client/upload/"+photo)
+                  var imageBuffer = decodeBase64Image(newPhoto);
+                  fs.writeFile('./src/client/upload/'+RandomName, imageBuffer.data, function(err) {
+
+                  });
+                  } catch(err) {
+                    console.error(err)
+                  }
+
+                }else{
+                  console.log("Edycja postu bez zmiany zdjecia")
+                }
+                resolve({Error:"Udało się zmienić post!", NewRandomPhoto:RandomName})
+              }
+            }else{
+              console.log("dupa");
+              resolve({Error:"Nie udało się zmienić posta!"})
+            }
+          });
+        }
+      }
+
+    });
+
   });
 }
 
@@ -290,7 +420,7 @@ var AddToWall = function(photo, userLogin, userEmail, Date) {
     connection.query(sql, function (error, results, fields) {
       if(results) resolve({Error:"Wall photo added"});
       if (error) {
-        throw error;
+        console.log(error);
         resolve({Error:"Wall photo error"});
       }
     });
@@ -303,20 +433,37 @@ var mainPosts = function() {
 
     var sql = 'SELECT * FROM posts'
     connection.query(sql, function (error, results, fields) {
-      if (error) throw error;
-
+      if (error) console.log(error);
+      if(results){
       if(results.length>0){
            resolve({Posts: results})
       }else{
         resolve("Brak postów")
       }
+    }
     });
   });
 }
 
 app.use(express.json());
 
+function decodeBase64Image(dataString) {
+  var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+    response = {};
+
+  if (matches.length !== 3) {
+    return new Error('Invalid input string');
+  }
+
+  response.type = matches[1];
+  response.data = Buffer.from(matches[2], 'base64');
+
+  return response;
+}
+
 app.post('/api/addPost', AddPostLimit, function(req, res) {
+
+
   var title = req.body.title;
   var category = req.body.category;
   var email = req.body.email;
@@ -353,9 +500,20 @@ app.post('/api/addPost', AddPostLimit, function(req, res) {
     return;
   }
 
-  console.log("DL "+description.length);
   if(description.length<100){
     res.send({Error:"Za krótki opis"})
+    Stop=1;
+    return;
+  }
+
+  if(description.length>100000){
+    console.log("za dlugi opis!");
+    Stop=0;
+    return;
+  }
+
+  if(email.length>30){
+    res.send({Error:"Za długi email"});
     Stop=1;
     return;
   }
@@ -368,6 +526,74 @@ if(Stop==0){
   res.send({Error:"Post added!"})
   AddPost(title, category, email, photo, date, description, voivodeship, userLogin, userEmail, randomLink).then(function(data) {
     console.log("Trying to add post")
+
+  })
+}
+
+});
+
+app.post('/api/ChangePost', ChangePostLimit, function(req, res) {
+  var newPhoto = req.body.newPhoto;
+  var photoChanged = req.body.photoChanged;
+  var pass_user = req.body.passUser;
+  var email_user = req.body.emailUser;
+  var link = req.body.link
+  var title = req.body.title;
+  var category = req.body.category;
+  var email = req.body.email;
+  var photo = req.body.photo;
+  var description = req.body.description;
+  var voivodeship = req.body.voivodeship;
+  var ValidateEmail = validator.validate(email); // true
+  var Stop = 0;
+
+  if(title.length<6){
+    res.send({Error:"Za krótki tytuł"});
+    Stop=1;
+    return;
+  }
+
+  if(email.length>30){
+    res.send({Error:"Za długi email"});
+    Stop=1;
+    return;
+  }
+
+  if(description.length>100000){
+    console.log("za dlugi opis!");
+    Stop=0;
+    return;
+  }
+  if(title.length>80){
+    res.send({Error:"Za długi tytuł"});
+    Stop=1;
+    return;
+  }
+  if(title.length>120){
+    res.send({Error:"Za długi tytuł"});
+    Stop=1;
+    return;
+  }
+
+  if(ValidateEmail===false){
+    res.send({Error:"Nieprawidłowy email"})
+    Stop=1;
+    return;
+  }
+
+  if(description.length<100){
+    res.send({Error:"Za krótki opis"})
+    Stop=1;
+    return;
+  }
+
+
+if(Stop==0){
+  description = entities.encode(description)
+  title = entities.encode(title)
+  email = entities.encode(email)
+  ChangePost(title, category, email, photo, description, voivodeship, link, email_user, pass_user, photoChanged, newPhoto).then(function(data) {
+    res.send(data);
 
   })
 }
@@ -451,7 +677,6 @@ app.post('/api/login', function(req, res) {
 
 
 app.post('/api/AddToWall', WallAddLimiter, function(req, res) {
-    console.log("ASD");
   var photo = req.body.photo;
   var userLogin = req.body.userLogin;
   var userEmail = req.body.userEmail;
@@ -469,8 +694,8 @@ var displayWall = function() {
   return new Promise(function(resolve, reject) {
     var sql = 'SELECT * FROM dogsphotos ORDER BY id DESC LIMIT 20'
     connection.query(sql, function (error, results, fields) {
-      if (error) throw error;
-
+      if (error) console.log(error);
+      if(results){
       if(results.length>0){
         var MainPageImages = [];
         for (let pw=0; pw<results.length; pw++){
@@ -482,6 +707,7 @@ var displayWall = function() {
       }else{
         resolve({Error:"Brak zdjęć"})
       }
+    }
     });
   });
 }
@@ -528,8 +754,8 @@ var displayPostsSlider = function() {
   return new Promise(function(resolve, reject) {
     var sql = 'SELECT * FROM posts ORDER BY id DESC LIMIT 10'
     connection.query(sql, function (error, results, fields) {
-      if (error) throw error;
-
+      if (error) console.log(error);
+      if(results){
       if(results.length>0){
         var MainPagePosts = [];
 
@@ -539,16 +765,80 @@ var displayPostsSlider = function() {
           DescirptionText = entities.decode(DescirptionText);
           results[pw].email = entities.decode(results[pw].email)
           results[pw].title = entities.decode(results[pw].title)
-          var PhotoText =  Buffer.from( results[pw].photo, 'binary' ).toString();
-          MainPagePosts.push({PostID:pw, Error:'', title:results[pw].title, category: results[pw].category, voivodeship:results[pw].voivodeship, email:results[pw].email, photo:PhotoText, description:DescirptionText, created_at:results[pw].created_at, link:results[pw].link})
+          MainPagePosts.push({PostID:pw, Error:'', title:results[pw].title, category: results[pw].category, voivodeship:results[pw].voivodeship, email:results[pw].email, photo:results[pw].photo, description:DescirptionText, created_at:results[pw].created_at, link:results[pw].link})
         }
         resolve(MainPagePosts)
       }else{
         resolve({Error:"Brak postów"})
       }
+    }
     });
   });
 }
+
+var SearchPosts = function(CategoryFind, VoivodeshipFind, NewOld, StartPost, HowManyPosts) {
+
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT COUNT(id) as count FROM posts WHERE category IN (?) AND voivodeship IN (?)",
+    [
+      CategoryFind,
+      VoivodeshipFind,
+    ],
+    function (error, results, fields) {
+      if (error) console.log(error);
+      var count = results[0].count;
+      connection.query("SELECT * FROM posts WHERE category IN (?) AND voivodeship IN (?) ORDER BY id "+NewOld+" LIMIT ?, ?",
+      [
+        CategoryFind,
+        VoivodeshipFind,
+        StartPost,
+        HowManyPosts
+      ],
+      function (error, results, fields) {
+        if (error) console.log(error);
+        if(results){
+        if(results.length>0){
+          var MainPagePosts = [];
+          for (let pw=0; pw<results.length; pw++){
+            var DescirptionText =  Buffer.from( results[pw].description, 'binary' ).toString();
+            DescirptionText = entities.decode(DescirptionText);
+            results[pw].email = entities.decode(results[pw].email)
+            results[pw].title = entities.decode(results[pw].title)
+            results[pw].link = results[pw].link.replace(results[pw].link, "/"+results[pw].link)
+            MainPagePosts.push({PostID:pw, Error:'', title:results[pw].title, category: results[pw].category, voivodeship:results[pw].voivodeship, email:results[pw].email, photo:results[pw].photo, description:DescirptionText, created_at:results[pw].created_at, link:results[pw].link, count:count})
+          }
+          resolve(MainPagePosts)
+        }else{
+          resolve({Error:"Brak postów"})
+        }
+      }
+      });
+    });
+  });
+}
+
+app.post('/api/SearchPosts', function(req, res) {
+  var PageNum = req.body.pageNum;
+  if(PageNum==1){
+    var StartPost = 0
+  }else{
+    var StartPost = (PageNum*20)-20;
+  }
+
+  var HowManyPosts = 20;
+
+  if(req.body.NewOld=="Najnowsze"){
+    req.body.NewOld="DESC";
+  }
+  if(req.body.NewOld=="Najstarsze"){
+    req.body.NewOld="ASC";
+  }
+
+  SearchPosts(req.body.Category, req.body.Voivodeship, req.body.NewOld, StartPost, HowManyPosts).then(function(data) {
+    res.send(data);
+  })
+});
+
 
 var displayPostsSliderProfile = function(email) {
   return new Promise(function(resolve, reject) {
@@ -557,8 +847,8 @@ var displayPostsSliderProfile = function(email) {
       email
     ],
     function (error, results, fields) {
-      if (error) throw error;
-      console.log(results.length);
+      if (error) console.log(error);
+      if(results){
       if(results.length>0){
         var MainPagePosts = [];
         if(results.length==1){
@@ -567,7 +857,7 @@ var displayPostsSliderProfile = function(email) {
             DescirptionText = entities.decode(DescirptionText);
             results[pw].email = entities.decode(results[pw].email)
             results[pw].title = entities.decode(results[pw].title)
-            var PhotoText =  Buffer.from( results[pw].photo, 'binary' ).toString();
+            var PhotoText = results[pw].photo;
             MainPagePosts.push({PostID:pw, Error:'', title:'Miejsce na twój przyszły post!', category: 'Twoja kategoria', voivodeship:"Twoje województwo", email:'', photo:'/src/client/dog.png', description:'Zachęcamy do pomagania psiakom. Twórz oraz udostępniaj posty, nie bój się działać!', created_at:'', link:''})
             MainPagePosts.push({PostID:pw, Error:'', title:results[pw].title, category: results[pw].category, voivodeship:results[pw].voivodeship, email:results[pw].email, photo:PhotoText, description:DescirptionText, created_at:results[pw].created_at, link:results[pw].link})
             MainPagePosts.push({PostID:pw, Error:'', title:'Miejsce na twój przyszły post!', category: 'Twoja kategoria', voivodeship:"Twoje województwo", email:'', photo:'/src/client/dog.png', description:'Zachęcamy do pomagania psiakom. Twórz oraz udostępniaj posty, nie bój się działać!', created_at:'', link:''})
@@ -579,7 +869,7 @@ var displayPostsSliderProfile = function(email) {
             DescirptionText = entities.decode(DescirptionText);
             results[pw].email = entities.decode(results[pw].email)
             results[pw].title = entities.decode(results[pw].title)
-            var PhotoText =  Buffer.from( results[pw].photo, 'binary' ).toString();
+            var PhotoText = results[pw].photo;
             MainPagePosts.push({PostID:pw, Error:'', title:results[pw].title, category: results[pw].category, voivodeship:results[pw].voivodeship, email:results[pw].email, photo:PhotoText, description:DescirptionText, created_at:results[pw].created_at, link:results[pw].link})
           }
           MainPagePosts.push({PostID:2, Error:'', title:'Miejsce na twój przyszły post!', category: 'Twoja kategoria', voivodeship:"Twoje województwo", email:'', photo:'/src/client/dog.png', description:'Zachęcamy do pomagania psiakom. Twórz oraz udostępniaj posty, nie bój się działać!', created_at:'', link:''})
@@ -590,7 +880,7 @@ var displayPostsSliderProfile = function(email) {
             DescirptionText = entities.decode(DescirptionText);
             results[pw].email = entities.decode(results[pw].email)
             results[pw].title = entities.decode(results[pw].title)
-            var PhotoText =  Buffer.from( results[pw].photo, 'binary' ).toString();
+              var PhotoText = results[pw].photo;
             MainPagePosts.push({PostID:pw, Error:'', title:results[pw].title, category: results[pw].category, voivodeship:results[pw].voivodeship, email:results[pw].email, photo:PhotoText, description:DescirptionText, created_at:results[pw].created_at, link:results[pw].link})
           }
           resolve(MainPagePosts)
@@ -602,6 +892,7 @@ var displayPostsSliderProfile = function(email) {
         MainPagePosts.push({PostID:2, Error:'', title:'Miejsce na twój przyszły post!', category: 'Twoja kategoria', voivodeship:"Twoje województwo", email:'', photo:'/src/client/dog.png', description:'Zachęcamy do pomagania psiakom. Twórz oraz udostępniaj posty, nie bój się działać!', created_at:'', link:''})
         resolve(MainPagePosts)
       }
+    }
     });
   });
 }
@@ -621,7 +912,7 @@ app.post('/api/displayPostsSliderProfile', function(req, res) {
 
 
 
-app.post('/api/register', function(req, res) {
+app.post('/api/register', RegisterLimit, function(req, res) {
     var infoLogin="";
     var infoEmail="";
     var infoPassword="";
@@ -651,7 +942,7 @@ app.post('/api/register', function(req, res) {
     }
 
     if(infoLogin.length==0 && infoEmail.length==0 && infoPassword.length==0 && infoPasswords.length==0){
-      Register(name, email, password, password2, dateTime).then(function(data) {
+      Register(name, email, password, password2, dateTime, req.body.RegisterAds, req.body.RegisterRules).then(function(data) {
 
         if(data=="Podany email jest zajęty!"){
           res.send({RegisterSuccess:"Podany email jest zajęty!", infoLogin:infoLogin, infoEmail:infoEmail, infoPassword:infoPassword, infoPasswords:infoPasswords});

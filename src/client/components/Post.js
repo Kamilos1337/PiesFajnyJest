@@ -126,7 +126,7 @@ Najnowsze posty <Badge variant="secondary" id="TEST">WSZYSTKIE</Badge>
   <Col  key={i}>
 
             <Card  className="postMain">
-              <CardImg  src={this.state.MainPosts[item].photo} className="postImg" alt="Card image cap" />
+              <CardImg  src={"./src/client/upload/"+this.state.MainPosts[item].photo} onError={(e)=>{e.target.onerror = null; e.target.src="/src/client/dog.png"}} className="postImg" alt="Zdjęcie postu na PiesFajnyJest" />
               <CardBody>
                 <CardTitle  className="postTitle">{this.state.MainPosts[item].title}</CardTitle>
                 <CardSubtitle  className="postTags">{this.state.MainPosts[item].category}</CardSubtitle>

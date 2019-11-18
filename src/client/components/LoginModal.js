@@ -22,11 +22,44 @@ class LoginModal extends React.Component {
       CheckRegister:"",
       dropdownOpen: false,
       emailColor:"",
+      RegisterAds: false,
+      RegisterRules: false,
+      RegisterAll: false,
       firstTime:localStorage.getItem('firstLogIn'),
       userLogin: localStorage.getItem('userLogin')
     };
     this.handleChange = this.handleChange.bind(this);
     this.toggle = this.toggle.bind(this);
+
+  }
+
+
+  toggleChangeAds = () => {
+    this.setState({
+      RegisterAds: !this.state.RegisterAds,
+    });
+  }
+
+  toggleChangeRules = () => {
+    this.setState({
+      RegisterRules: !this.state.RegisterRules,
+    });
+  }
+
+    toggleChangeBoth = () => {
+      if(this.state.RegisterAll==false){
+        this.setState({
+          RegisterRules: true,
+          RegisterAds: true,
+          RegisterAll: true,
+        });
+      }else{
+        this.setState({
+          RegisterRules: false,
+          RegisterAds: false,
+          RegisterAll: false,
+        });
+      }
 
   }
 
@@ -60,6 +93,7 @@ class LoginModal extends React.Component {
 
 
 Register(){
+  if(this.state.RegisterRules==true){
   var date = new Date().getDate(); //Current Date
   var month = new Date().getMonth() + 1; //Current Month
   if(month<10){
@@ -79,7 +113,8 @@ Register(){
     email: this.state.email,
     password: this.state.password,
     password2: this.state.password2,
-    dateTime: FullDate
+    dateTime: FullDate,
+    RegisterAds: this.state.RegisterAds
   }),
 })
 .then(resp => resp.json())
@@ -90,7 +125,6 @@ Register(){
       var infoPasswords = resp.infoPasswords;
       var CheckRegister = resp.RegisterSuccess;
 
-      console.log(resp);
       infoEmail == "Podany email jest nieprawidłowy!" ?  this.setState({infoEmail: infoEmail}) : this.setState({emailColor: 'greenyellow'});
       infoLogin == "Podane imię jest za krótkie!" ?  this.setState({infoLogin:infoLogin})  : this.setState({emailColor: 'greenyellow'});
       infoPassword == "Podane hasło jest za krótkie!" ?  this.setState({infoPassword:infoPassword})  : this.setState({emailColor: 'greenyellow'});
@@ -101,8 +135,12 @@ Register(){
 
 
 
-  })
-
+  }).catch(function(){
+      NotificationManager.error("Zbyt wiele prób rejestracji, spróbuj ponownie za 30 minut!", "Nie udało się!")
+  });
+}else{
+  NotificationManager.error("Aby się zarejestrować, musisz potwierdzić nasz regulamin!", "Nie udało się!")
+}
 }
 
 
@@ -127,7 +165,7 @@ Login(){
 
       var CheckLogin = resp.Login;
 
-      console.log(resp);
+
 
       if(CheckLogin=="Użytkownik zalogowany!"){
         this.toggle()
@@ -176,10 +214,18 @@ Login(){
             : null}
             <FormGroup check>
             {this.props.register ?
+              <div className="displayGrid">
               <Label check>
-                <Input type="checkbox" />{' '}
-                Akceptuje <a href="regulamin.pdf"><span className="rules">regulamin</span></a>
+                <Input type="checkbox" checked={this.state.RegisterBoth}
+                onChange={this.toggleChangeBoth} />{' '}
+                Zaznacz wszystko
               </Label>
+              <Label check>
+                <Input type="checkbox" checked={this.state.RegisterRules}
+                onChange={this.toggleChangeRules} />{' '}
+                Akceptuje <a href="regulamin.pdf"><span className="rules">regulamin</span></a><span className="rules">*</span>
+              </Label>
+              </div>
             :
             <Label check>
               <Input type="checkbox" />{' '}
@@ -188,8 +234,9 @@ Login(){
             }
             {this.props.register ?
               <Label check>
-                <Input type="checkbox" />{' '}
-                Informuj mnie o ciekawych akcjach i nowych funkcjach
+                <Input type="checkbox" checked={this.state.RegisterAds}
+                onChange={this.toggleChangeAds} id="profileAds" name="radio1" />{' '}
+               Chcę otrzymywać maile o nowych funkcjach, interesujących akcjach oraz tym podobnym od PiesFajnyJest.pl.
               </Label>
             : null}
 

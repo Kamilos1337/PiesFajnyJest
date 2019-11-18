@@ -1,6 +1,4 @@
 import React from 'react';
-import ReactNotification from "react-notifications-component";
-import "react-notifications-component/dist/theme.css";
 import {Container, Row, Col} from 'react-bootstrap'
 import Navbar100 from '../Navbar/Navbar100';
 import DogBackground from '../img/transparent.png';
@@ -98,7 +96,10 @@ export default class InfoNav extends React.Component {
    .then(resp => {
          var Error = resp.Error;
 
-         console.log(Error);
+         if(Error=="Za długi email"){
+           NotificationManager.error("Podany email jest za długi. Aby spełniał nasze kryteria nie może zawierać więcej niż 30 znaków.", "Zły email!");
+         }
+         
          if(Error=="Za krótki tytuł"){
            NotificationManager.error("Podany tytuł jest za krótki. Aby spełniał nasze kryteria musi zawierać minimum 6 znaków.", "Zły tytuł!");
          }
@@ -138,7 +139,7 @@ export default class InfoNav extends React.Component {
                 document.getElementById("email").value="";
                 document.getElementById("addPostTextArea").value="";
            NotificationManager.success("Aby zobacz swój post wejdź w zakładkę 'moje posty'.", "Dodano post!");
-           console.log(this.state.text)
+
          }
      }).catch(function() {
        NotificationManager.error("Aby dodać kolejny post musisz odczekać 30 minut.", "Nie udało się dodać postu!")

@@ -23,7 +23,7 @@ export default class User extends React.Component {
                 <p><Link to="/konto">Profil</Link></p>
                 <p><Link to="#contact">Kontakt</Link></p>
                 <p><Link to="/dodajpost">Dodaj ogłoszenie</Link></p>
-                <p><Link to="/ogloszenia">Zobacz ogłoszenia</Link></p>
+                <p><Link to="/posty/1">Zobacz ogłoszenia</Link></p>
                </Col>
 
                <Col>

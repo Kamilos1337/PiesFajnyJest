@@ -176,7 +176,7 @@ changePassword(){
   })
   .then(resp => resp.json())
   .then(resp => {
-    console.log(resp);
+
     if(resp.Info=="Haslo zmienione!"){
       NotificationManager.success("Gratulacje, twoje hasło zostało zmienione.", "Udało się!");
       localStorage.setItem('userPass', resp.Pass);
@@ -381,7 +381,7 @@ displayPostsSlider(){
                 <Col  key={i}>
 
                           <Card  className="postMain">
-                            <CardImg  src={this.state.MainPosts[item].photo} onError={(e)=>{e.target.onerror = null; e.target.src='/src/client/dog.png'}} className="postImg" alt="Card image cap" />
+                            <CardImg  src={"./src/client/upload/"+this.state.MainPosts[item].photo} onError={(e)=>{e.target.onerror = null; e.target.src='/src/client/dog.png'}} className="postImg" alt="Card image cap" />
                             <CardBody>
                               <CardTitle  className="postTitle">{this.state.MainPosts[item].title}</CardTitle>
                               <CardSubtitle  className="postTags">{this.state.MainPosts[item].category}</CardSubtitle>
@@ -412,7 +412,7 @@ displayPostsSlider(){
                   <Col>
                  <FormGroup>
                     <p className="redColor">Potwierdź hasło</p>
-                    <Input type="password" id="removeAccount" value={this.state.value} onChange={this.handleChange} placeholder="Stare hasło" autoComplete="new-password" />
+                    <Input type="password" id="removeAccount" value={this.state.value} onChange={this.handleChange} placeholder="Aktualne hasło" autoComplete="new-password" />
                   </FormGroup>
                   </Col>
                   <Col>

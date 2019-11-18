@@ -34,7 +34,7 @@ export default class Post extends React.Component {
 <CardImg src={Dog2} className="dog2Image" alt="Card image cap" />
 <CardImg src={Dog2} className="dog2Image" alt="Card image cap" />
 </span>
-<Button className="mainCenterTextButton" color="danger" >ZOBACZ OGŁOSZENIA</Button>
+<Button className="mainCenterTextButton" color="danger" ><Link to="/posty/1">ZOBACZ OGŁOSZENIA</Link></Button>
 <Button className="mainCenterTextButton" color="danger" ><Link to="/dodajpost">DODAJ OGŁOSZENIE</Link></Button>
 
 

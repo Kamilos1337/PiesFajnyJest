@@ -85,7 +85,7 @@ _handleSubmit(e) {
  })
  .then(resp => resp.json())
  .then(resp => {
-   console.log(resp);
+
    if(resp.Error=="Wall photo added"){
        this.setState({PhotosWall:''});
      NotificationManager.success("Gratulacje, twoje zdjęcie znajduje się na naszej psiej tablicy!", "Zdjęcie zostało dodane!")
@@ -93,7 +93,7 @@ _handleSubmit(e) {
    }
 
    if(resp.Error=="Wall photo error"){
-    console.log(resp);
+    console.log("Error!");
    }
 
 
@@ -139,7 +139,7 @@ _handleImageChange(e) {
 
              <Row>
               <Col>
-              <p className="BannerTitle">  <img className="Banner" src={Add} alt="PiesFajnyJest, wspieraj, adoptuj, pomagaj!" /> <span className="textBanner">Dodaj zdjęcie swojego psa!</span></p>
+              <p className="BannerTitle">  <img className="Banner2" src={Add} alt="PiesFajnyJest, wspieraj, adoptuj, pomagaj!" /> <span className="textBanner">Dodaj zdjęcie swojego psa!</span></p>
               <p className="BannerDesc">Nie wstydźmy się pokazywać swoich psiaków innym, twoje zdjęcie może byc inspiracją dla kogoś dlatego łap za telefon czy też aparat i strzel fotkę swojemu czteronożnemu przyjacielowi. Niech świat go zobaczy na naszej psiej tablicy!</p>
 
               </Col>

@@ -42,7 +42,6 @@ export default class MyNavbar extends User {
   Welcome(){
 
     if(this.state.firstTime=="Yes"){
-      console.log("DUPA");
       NotificationManager.success('Zalogowano pomyślnie! Możesz teraz w pełni korzystać z naszej strony.', this.state.userName+', gratulacje!');
       localStorage.removeItem('firstTime');
     }

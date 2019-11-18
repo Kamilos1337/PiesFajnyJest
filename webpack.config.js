@@ -7,8 +7,9 @@ const outputDirectory = 'dist';
 module.exports = {
   entry: ['babel-polyfill', './src/client/index.js'],
   output: {
-    path: path.resolve(__dirname, 'src/client/components/img'),
-    filename: 'bundle.js',
+     path: path.resolve(__dirname, 'dist'),
+     filename: 'bundle.js',
+     publicPath: '/'
   },
   module: {
     rules: [{

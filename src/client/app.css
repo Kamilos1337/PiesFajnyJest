@@ -144,6 +144,9 @@ a:hover{
   text-decoration: none;
   color:white;
 }
+.colorBlack{
+  color:black !important
+}
 .dog2Image{
   width:50px;
   margin-bottom:15px;
@@ -232,6 +235,147 @@ a:hover{
 .black{
   color:black !important;
 }
+.displayGrid{
+  display:grid !important;
+}
+.SelectFind{
+  margin:10px !important;
+  text-align:left !important;
+}
+.multi-select{
+  display:contents !important;
+}
+.multi-select:first-child{
+  margin:10px !important;
+  text-align:left !important;
+}
+div[role="combobox"]{
+  margin:10px !important;
+  text-align:left !important
+}
+.BlocksRow{
+  margin-top: 20px;
+      padding-top: 30px;
+      padding-bottom: 30px;
+      border: 1px solid #20262e;
+      border-radius: 10px;
+}
+.FindFirstRow{
+  margin-top:20px;
+}
+.SearchAllPosts{
+  margin-top:50px;
+  text-align: center;
+}
+.SearchNums1{
+  display:block;
+  text-align:center;
+  margin: 0 auto;
+    background-color: #F45355 !important;
+    padding: 20px;
+    font-size: large;
+    font-family: cursive;
+    font-weight: 900;
+    color: white;
+    width: fit-content;
+    border-bottom-left-radius: 500px;
+    border-bottom-right-radius: 50px;
+    border-top-right-radius: 50px;
+
+}
+.SearchNums2{
+  display:block;
+  text-align:center;
+  margin: 0 auto;
+    background-color: #F45355 !important;
+    padding: 20px;
+    font-size: large;
+    font-family: cursive;
+    font-weight: 900;
+    color:white;
+    width: fit-content;
+    border-radius:10px;
+
+}
+.SearchNums3{
+  display:block;
+  text-align:center;
+  margin: 0 auto;
+    background-color: #F45355 !important;
+    padding: 20px;
+    font-size: large;
+    font-family: cursive;
+    font-weight: 900;
+    color: white;
+    width: fit-content;
+    border-bottom-right-radius: 500px;
+    border-bottom-left-radius: 50px;
+    border-top-left-radius: 50px;
+
+}
+.SearchBlocks{
+  text-align: center;
+  display: block;
+  margin-top: 15px;
+  color:#20262e;
+  text-decoration: underline;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.SearchEachPost{
+  display: inline-block;
+  margin: 10px 0 0 2%;
+  text-align: left !important;
+  flex-grow: 1;
+
+      margin-bottom: 40px;
+  width: calc(30%);
+}
+.FindPosts{
+  width: 70% !important;
+margin: 0 auto;
+display: block;
+border-radius: 44px;
+}
+.item-renderer input{
+  display:none !important;
+
+}
+.Pagination{
+  padding-top: 20px;
+  border-top: 1px solid #20262e;
+}
+.PagDiv{
+  text-align:center;
+}
+.paginationButton{
+  font-size:20px;
+  padding-left:20px;
+  padding-right:20px;
+  color:black !important;
+  padding-top:10px;
+  padding-bottom:10px;
+  background-color:transparent !important;
+  border:none !important;
+
+}
+.currentPage{
+  background-color:#F45355 !important;
+  color: white;
+  padding-top:10px;
+  padding-bottom:10px;
+    border-radius: 999px;
+}
+.item-renderer span{
+  cursor:pointer !important;
+
+}
+.currentPage{
+  background-color:red;
+}
+.select-item{
+  cursor:pointer !important;
+}
 .FooterDesc{
   margin-top:20px;
   padding-top:10px;
@@ -239,12 +383,15 @@ a:hover{
   color:#fff;
   opacity:0.5;
 }
+.FormGroupFind{
+  display:flex !important
+}
 .ProfileRow{
   padding-bottom:5px;
   border-bottom:2px solid #eee ;
   text-align:center;
   color:#F45355;
-  font-family: 'Open Sans',sans-serif;
+  font-family: serif;
     font-weight: 400;
     font-size:20px;
 }
@@ -260,6 +407,9 @@ a:hover{
   background-color:white;
 
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+}
+.EditProfile{
+
 }
 .redColor{color:red;
 text-transform: uppercase;
@@ -293,13 +443,78 @@ text-align: center;
 }
 .ShareCol{
   max-width:67%;
-
+  padding-bottom:20px !important;
 }
 .colUser{
       max-width:30%;
       margin-left:30px;
       height:100%;
 
+}
+.EditDesc{
+ width:95% !important;
+ margin:0 auto !important;
+ min-height:250px;
+}
+.itemBorder{
+  border-bottom:2px solid darkseagreen !important;
+}
+.allItems{
+  text-align:center;
+}
+
+.leftItem{
+  margin-left:10px;
+}
+.rightItem{
+  margin-right:10px;
+}
+.dogIcon{
+
+  color:#F45355 !important;
+}
+.textItems{
+  font-family:serif !important;
+}
+.colItems{
+  margin-left: 20% !important;
+      margin-right: 20% !important;
+      border: 1px solid gainsboro;
+      border-radius: 10px !important;
+      padding-top: 10px !important;
+      padding-bottom: 10px !important;
+}
+.itemDate{
+  border-bottom: 1px solid #F45355;
+    padding-bottom: 4px;
+    font-size: 14px;
+    font-family: monospace !important;
+}
+.editInput{
+  width: 80% !important;
+    margin: 0 auto !important;
+}
+.editMargin{
+  margin-top: 20px !important;
+}
+.trans90{
+  -webkit-transform: rotate(90deg);
+   -moz-transform: rotate(90deg);
+   -o-transform: rotate(90deg);
+   -ms-transform: rotate(90deg);
+   transform: rotate(90deg);
+   font-size:24px;
+   margin-top:10px;
+   margin-bottom:10px;
+   color:#F45355 !important;
+}
+.editInput16{
+  font-size:16px !important;
+  text-align:left !important
+}
+.EditProfile{
+  display:block !important;
+  margin:0 auto !important;
 }
 .loginBTTN{
 
@@ -342,6 +557,8 @@ text-align: center;
 }
 .Banner{
   border-radius:30px;
+  width: -webkit-fill-available;
+display: flex;
 }
 .BannerDesc{
   text-align: justify;
@@ -539,7 +756,7 @@ height:100%;
   border-top-left-radius: 20px;
       border-top-right-radius: 20px;
       text-align:center;
-        font-family: 'Open Sans',sans-serif;
+        font-family: serif;
 margin-bottom:0px !important;
         color:white;
   background-color:#F45355;
@@ -562,7 +779,7 @@ margin-bottom:0px !important;
 }
 .postUser{
   text-align:center;
-  font-family: 'Open Sans',sans-serif;
+  font-family: serif;
     font-weight: 400;
     margin-top:20px;
     padding-bottom:10px;
@@ -570,7 +787,7 @@ margin-bottom:0px !important;
 }
 .postShare{
   text-align:center;
-  font-family: 'Open Sans',sans-serif;
+  font-family: serif;
     font-weight: 400;
     font-size:20px;
     padding-bottom:10px;
@@ -578,7 +795,7 @@ margin-bottom:0px !important;
 }
 .postShare2{
   text-align:center;
-  font-family: 'Open Sans',sans-serif;
+  font-family: serif;
     font-weight: 400;
     font-size:20px;
     padding-bottom:10px;
@@ -600,7 +817,7 @@ margin-bottom:0px !important;
 }
 .eachTitle{
   text-align:center;
-  font-family: 'Open Sans',sans-serif;
+  font-family: serif;
     font-weight: 400;
     font-size:22px;
     word-wrap: break-word;
@@ -611,7 +828,7 @@ margin-bottom:0px !important;
 }
 .postUserLast{
   text-align:center;
-  font-family: 'Open Sans',sans-serif;
+  font-family: serif;
     font-weight: 400;
     margin-top:20px;
     padding-bottom:10px;
@@ -770,6 +987,7 @@ font-size: 20px;
 .PostText{
   word-wrap: break-word;
   margin-left:15px;
+  font-family:sans-serif;
   margin-right:15px;
   white-space: pre-line;
 }
@@ -781,6 +999,44 @@ font-size: 20px;
 }
 .navbar-light .navbar-toggler{
   display:none !important;
+}
+.textareaNews{
+  overflow:hidden !important;
+  margin:0 auto;
+  width: 80% !important;
+  margin-top:20px;
+  font-family: serif;
+  min-height: 100px;
+}
+.AddNews{
+
+
+}
+.NewButton{
+  color: #e83e3e!important;
+  border: 1px solid rgba(230,65,100,.2) !important;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.1) !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  padding-bottom: 10px;
+  background: linear-gradient(90deg,#fff,#fff) !important;
+  padding-top: 10px;
+  padding-left: 20px;
+  font-family:serif !important;
+  padding-right: 20px;
+}
+.NewButton:hover {
+  background-color:#F45355 !important;
+  color:white;
+}
+.sup{
+  color: #F45355;
+margin-left: 5px;
+font-weight: bold;
+}
+.buttonNews{
+  padding-bottom:20px;
+  padding-top:20px;
 }
 .postTags{
   color:gray;

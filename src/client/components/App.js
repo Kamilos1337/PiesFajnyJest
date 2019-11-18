@@ -10,6 +10,7 @@ import Banner from './banner';
 import PhotosWall from './photosWall';
 import Contact from './contact';
 import Profile from './profile';
+import PostFinder from './PostFinder';
 
 class App extends React.Component {
   render(){
@@ -46,5 +47,16 @@ class Konto extends React.Component {
   }
 }
 
+class Posty extends React.Component {
+  render(){
+    return(
+      <div>
+      <PostFinder/>
+      </div>
+    );
+  }
+}
 
-export { App, addPost, Konto };
+
+
+export { App, addPost, Konto, Posty };
