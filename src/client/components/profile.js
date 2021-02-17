@@ -2,16 +2,12 @@ import React from 'react';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { Card, Row, Col, CardImg, CardText, CardBody,
-  CardTitle, CardSubtitle, Button, FormGroup, Input, Label } from 'reactstrap';
-  import Container from 'react-bootstrap/Container'
-  import Badge from 'react-bootstrap/Badge'
-import Dog from './img/dog.png';
-import Map from './img/map.svg';
-import Arrow from './img/right-arrow.png';
-import LoadingDog from './img/LoadingDog.gif';
+CardTitle, CardSubtitle, Button, FormGroup, Input, Label } from 'reactstrap';
+import Container from 'react-bootstrap/Container'
+import Badge from 'react-bootstrap/Badge'
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { BrowserRouter, Route, IndexRoute, Link } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
 import Navbar100 from './Navbar/Navbar100';
 import Footer from './footer';
 import ReactNotification from "react-notifications-component";
@@ -351,21 +347,21 @@ displayPostsSlider(){
                 </Col>
                 <Col>
                 <p>Minimum 6 znaków</p>
-                  <Button  className="ZmienHaslo" id="changePassword" onClick={this.changePassword} color="danger" >Zmień hasło</Button>
+                  <Button  className="ZmienHaslo allWidth" id="changePassword" onClick={this.changePassword} color="danger" >Zmień hasło</Button>
 
                 </Col>
              </Row>
 
              <Row className="ProfileRow ProfilePref NoBorder">
                <Col className="margin10">
-               <span className="newPostsHeader"><img src={Arrow} className="LeftArrow" onClick={this.LeftArrow} alt="PiesFajnyJest.com najnowsze posty" />
+               <span className="newPostsHeader"><img src="/public/right-arrow.png" className="LeftArrow" onClick={this.LeftArrow} alt="PiesFajnyJest.com najnowsze posty" />
                Twoje posty
-         <img src={Arrow} className="RightArrow" onClick={this.RightArrow} alt="PiesFajnyJest.com najnowsze posty" />
+         <img src="/public/right-arrow.png" className="RightArrow" onClick={this.RightArrow} alt="PiesFajnyJest.com najnowsze posty" />
          </span>
                </Col>
              </Row>
 
-              {  this.state.isLoading ? <div className="Loading"><img src={LoadingDog} alt="loading..." /><p>Ładowanie postów</p></div> :
+              {  this.state.isLoading ? <div className="Loading"><img src="/public/LoadingDog.gif" alt="loading..." /><p>Ładowanie postów</p></div> :
 
                     <Carousel  swipeable={false}
                     draggable={true}
@@ -381,18 +377,18 @@ displayPostsSlider(){
                 <Col  key={i}>
 
                           <Card  className="postMain">
-                            <CardImg  src={"./src/client/upload/"+this.state.MainPosts[item].photo} onError={(e)=>{e.target.onerror = null; e.target.src='/src/client/dog.png'}} className="postImg" alt="Card image cap" />
+                            <CardImg  src={"./src/client/upload/"+this.state.MainPosts[item].photo} onError={(e)=>{e.target.onerror = null; e.target.src='/public/dog.png'}} className="postImg" alt="Card image cap" />
                             <CardBody>
                               <CardTitle  className="postTitle">{this.state.MainPosts[item].title}</CardTitle>
                               <CardSubtitle  className="postTags">{this.state.MainPosts[item].category}</CardSubtitle>
                               <CardText >{this.state.MainPosts[item].description}</CardText>
                               <Row>
-                              <CardImg  src={Map} className="mapImg mapInfos" alt="Card image cap" />
+                              <CardImg  src="/public/map.svg" className="mapImg mapInfos" alt="Card image cap" />
                                 <p className="mapPlace"> {this.state.MainPosts[item].voivodeship } </p>
 
 
                               </Row>
-                              <Button className="postSubmit btn-danger"><Link to={this.state.MainPosts[item].link}>ZOBACZ OGŁOSZENIE</Link></Button>
+                              <Button className="postSubmit btn-danger allWidth"><Link to={this.state.MainPosts[item].link}>ZOBACZ OGŁOSZENIE</Link></Button>
                             </CardBody>
                           </Card>
                             </Col>
@@ -417,7 +413,7 @@ displayPostsSlider(){
                   </Col>
                   <Col>
                   <p className="redColor">Nie można cofnąć tej czynności!</p>
-                    <Button  className="ZmienHaslo" id="removeAccount" onClick={this.removeAccount} color="danger" >Usuń konto</Button>
+                    <Button  className="ZmienHaslo allWidth" id="removeAccount" onClick={this.removeAccount} color="danger" >Usuń konto</Button>
 
                   </Col>
                </Row>

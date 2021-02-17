@@ -3,13 +3,9 @@ import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { Container, Row, Col } from 'reactstrap';
 import ResponsiveGallery from 'react-responsive-gallery';
-import Add from './img/add.png';
-import Swipe from './img/add-image.png';
-import ReactQuill, { Quill, Mixin, Toolbar } from 'react-quill'; // ES6
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, Form, FormGroup, Input } from 'reactstrap';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import LoadingDog from './img/LoadingDog.gif';
 
 export default class User extends React.Component {
   constructor(props) {
@@ -62,6 +58,7 @@ _handleSubmit(e) {
  }
 
  AddToWall(){
+   if(localStorage.getItem('userEmail')){
    var date = new Date().getDate(); //Current Date
  var month = new Date().getMonth() + 1; //Current Month
  if(month<10){
@@ -87,7 +84,7 @@ _handleSubmit(e) {
  .then(resp => {
 
    if(resp.Error=="Wall photo added"){
-       this.setState({PhotosWall:''});
+       this.setState({PhotosWall:'', imagePreviewUrl:''});
      NotificationManager.success("Gratulacje, twoje zdjęcie znajduje się na naszej psiej tablicy!", "Zdjęcie zostało dodane!")
      this.ShowWall();
    }
@@ -100,6 +97,9 @@ _handleSubmit(e) {
    }).catch(function() {
      NotificationManager.error("Aby dodać kolejne zdjęcię musisz odczekać 10 minut.", "Nie udało się dodać zdjęcia!")
     });
+  }else{
+    NotificationManager.error("Aby dodać zdjęcie musisz być zalogowany.", "Nie udało się dodać zdjęcia!")
+  }
  }
 
 _handleImageChange(e) {
@@ -119,7 +119,7 @@ _handleImageChange(e) {
      render(props){
 
        let {imagePreviewUrl} = this.state;
-      let $imagePreview = (<img className="displayImage" src={Swipe} />);
+      let $imagePreview = (<img className="displayImage" src="/public/add-image.png" />);
       if (imagePreviewUrl) {
         $imagePreview = (<img className="displayImage" src={imagePreviewUrl} />);
         var Find = document.getElementById("DodajZdjecie");
@@ -134,13 +134,13 @@ _handleImageChange(e) {
         var images = [{src:'fghfghfhg'}];
       }
        return(
-         <div>
+         <div id="Wall">
            <Container className="DogsWall">
 
              <Row>
-              <Col>
-              <p className="BannerTitle">  <img className="Banner2" src={Add} alt="PiesFajnyJest, wspieraj, adoptuj, pomagaj!" /> <span className="textBanner">Dodaj zdjęcie swojego psa!</span></p>
-              <p className="BannerDesc">Nie wstydźmy się pokazywać swoich psiaków innym, twoje zdjęcie może byc inspiracją dla kogoś dlatego łap za telefon czy też aparat i strzel fotkę swojemu czteronożnemu przyjacielowi. Niech świat go zobaczy na naszej psiej tablicy!</p>
+              <Col className="photosWallCol">
+              <p className="BannerTitle">  <img className="Banner2" src="/public/add.png" alt="PiesFajnyJest, wspieraj, adoptuj, pomagaj!" /> <span className="textBanner">Dodaj zdjęcie swojego psa!</span></p>
+              <p className="BannerDesc">Nie wstydźmy się pokazywać swoich psiaków innym, twoje zdjęcie może byc inspiracją dla kogoś! Dlatego łap za telefon czy aparat i strzel fotkę swojemu czworonożnemu przyjacielowi. Niech świat go zobaczy na naszej psiej tablicy!</p>
 
               </Col>
               <Col className="RightDogWall">
@@ -158,7 +158,7 @@ _handleImageChange(e) {
              <Row>
              <Col>
              {this.state.PhotosWall.length>0 ? <ResponsiveGallery images={images} useLightBox="true"/> :
-             <div className="Loading"><img src={LoadingDog} alt="loading..." /><p>Ładowanie postów</p></div>
+             <div className="Loading LoadingWall"><img src="/public/LoadingDog.gif" alt="loading..." /><p>Ładowanie postów</p></div>
              }
              <div>
 

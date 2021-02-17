@@ -9,8 +9,6 @@ import {
   Card,
   CardImg,
   NavItem,
-  NavLink,
-  UncontrolledDropdown,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
@@ -19,8 +17,6 @@ import LoginModal from '../LoginModal';
 import User from '../User';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import Love from '../img/love.svg';
-import Logo from '../img/logo.png';
 
 export default class MyNavbar extends User {
   constructor(props) {
@@ -67,41 +63,43 @@ export default class MyNavbar extends User {
        <Container className="navContainer">
 
         <Navbar color="da" light expand="md">
-          <NavbarBrand href="/"><CardImg src={Logo} className="logo" alt="Card image cap" /></NavbarBrand>
+          <NavbarBrand href="/"><CardImg src="/public/logo.png" className="logo mr-auto" alt="Card image cap" /></NavbarBrand>
 
-          <NavbarToggler onClick={this.toggle} />
+          <NavbarToggler onClick={this.toggle} className="mr-2"/>
           <Collapse isOpen={this.state.isOpen} navbar>
           {this.state.userName ?
               <Nav className="ml-auto" navbar>
               <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropDown}>
        <DropdownToggle className="btn btn-danger" caret>
-        <CardImg src={Love} className="loveImg" alt="Card image cap" /> {this.state.userName}
+        <CardImg src="/public/love.svg" className="loveImg" alt="Card image cap" /> {this.state.userName}
        </DropdownToggle>
        <DropdownMenu>
          <DropdownItem header>Panel użytkownika</DropdownItem>
         <DropdownItem> <Link to="/konto" className="black">Mój profil</Link></DropdownItem>
          <DropdownItem divider />
-         <DropdownItem>Dodaj ogłoszenie</DropdownItem>
-         <DropdownItem>Ustawienia</DropdownItem>
+         <DropdownItem><Link to="/dodajpost" className="black">Dodaj ogłoszenie</Link></DropdownItem>
+         <DropdownItem><Link to="/posty/1" className="black">Zobacz ogłoszenia</Link></DropdownItem>
          <DropdownItem onClick={ () => this.logout(this) }>Wyloguj</DropdownItem>
        </DropdownMenu>
      </Dropdown>
               </Nav>
              :
-              <Nav className="ml-auto" navbar>
-              <NavItem className="LoginRegister" >
+              <Nav className="mojaklasa ml-auto"navbar>
+              <NavItem className="RegisterLogin responseButton" >
               <LoginModal
               buttonLabel="Zaloguj się"
               title="Logowanie"
               inputSubmit="Zaloguj się"
+              className=" responseButton"
               />
               </NavItem>
-              <NavItem className="LoginRegister" >
+              <NavItem className="LoginRegister responseButton" >
               <LoginModal
               buttonLabel="Zarejestruj się"
               title="Rejestracja"
               inputSubmit="Zarejestruj się"
               register="register"
+              className=" responseButton"
               />
               </NavItem>
               </Nav>}

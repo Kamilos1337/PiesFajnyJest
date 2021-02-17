@@ -19,6 +19,10 @@ margin-left:5px;
 
   border-radius:600px;
 }
+.RegisterLogin{
+  width:100% !important;
+  text-align:right !important;
+}
 .formInfo{
   color:red;
 }
@@ -27,6 +31,20 @@ background-color:#F45355;
 }
 .PreferencjeButton{
   margin-top:10px;
+}
+.highTop{
+  margin-top:30px;
+}
+.LoginItems{
+  font-size: 14px;
+text-decoration: underline;
+cursor:pointer;
+text-align: left;
+color:red;
+margin-left: -1.25rem !important;
+}
+.fullwidth{
+  width:100% !important;
 }
 .userDrop{
 background-color:#F45355;
@@ -37,6 +55,33 @@ background-color:#F45355;
 .mainDiv{
   position: relative !important;
 
+}
+.text-center{
+  text-align:center !important;
+}
+.NewButton{
+  margin:0 auto !important;
+  display:block !important;
+}
+.EachComment{
+  margin: 0;
+margin-left: 20px;
+margin-right: 20px;
+padding-top: 20px;
+padding-bottom: 20px;
+border: 1px solid gainsboro;
+font-family: serif;
+text-align: justify;
+    margin-top: 20px;
+}
+
+.nameComments{
+  margin-left:15px;
+}
+.dateComments{
+  text-align: right !important;
+    display: block;
+    margin-right: 15px !important;
 }
 .loveImg{
   width:26px;
@@ -65,9 +110,170 @@ border-bottom:2px solid #eee;
   text-align:center;
 }
 @media only screen and (max-width: 1024px) {
+  .responseButton button{
+    font-size:14px !important;
+    padding:5px !important;
+    width: max-content !important;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .BannerDesc{
+    font-size:16px !important;
+  }
+  .textBanner{
+    font-size:20px !important;
+  }
+  .eachTitle{
+    font-size:16px !important;
+    margin-left:8px !important;
+    margin-right:8px !important;
+  }
+  .redInfo{
+    font-size:14px !important;
+  }
+  .colUserDiv{
+    font-size:14px !important;
+    margin-left:8px !important;
+    margin-right:8px !important;
+  }
+  .mainCenterTextButton{
+    font-size:14px !important;
+  }
+}
+@media only screen and (max-width: 1000px) {
+  .photosWallCol{
+    display:contents !important;
+  }
+  .LoadingWall{
+    margin-top:20px;
+  }
+}
+@media only screen and (max-width: 770px) {
+  .card-text{
+    min-height:0px !important;
+  }
+  .colUser{
+    margin-left:0px !important;
+  }
+
+}
+
+.mai
+.Banner2{
+  width:40px;
+}
+@media only screen and (max-width: 1200px) {
+  .respCol{
+    display:contents !important;
+  }
+  .BannerTitle{
+    margin-left: 25px;
+    margin-right: 25px;
+  }
+  .BannerDesc{
+    margin-left: 25px;
+    margin-right: 25px;
+  }
+  .DownTitle{
+    margin-top:20px;
+  }
+}
+@media only screen and (max-width: 840px) {
+  .containerMain {
+    zoom:0.8
+  }
+}
+@media only screen and (max-width: 770px) {
+  .containerMain {
+    zoom:0.7
+  }
+}
+
+@media only screen and (max-width: 615px) {
   .containerMain {
     zoom:0.6
   }
+  .navbar-expand-md {
+    zoom:0.9
+  }
+}
+@media only screen and (max-width: 540px) {
+  .containerMain {
+    zoom:0.5
+  }
+  .navbar-expand-md {
+    zoom:0.8
+  }
+}
+@media only screen and (max-width: 550px) {
+  .dog2Center {
+    display:none !important;
+  }
+}
+@media only screen and (max-width: 400px) {
+  .containerMain {
+    display:63% !important;
+  }
+}
+@media only screen and (max-width: 465px) {
+  .containerMain {
+    width: 80% !important;
+  }
+  .mainButtons{
+    margin: 0 auto !important;
+    display: block !important;
+    text-align: center !important;
+  }
+}
+@media only screen and (max-width: 700px) {
+  .containerMain {
+    top:60% !important;
+  }
+}
+nButtons{
+  display: flex;
+}
+@media only screen and (max-width: 350px) {
+  .RegisterLogin{
+    width: 100% !important;
+    text-align: left !important;
+  }
+  .newPostsHeader{
+    font-size:16px !important;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .newPostsHeader {
+    font-size: 18px !important;
+  }
+  .loadingText{
+    font-size:14px !important;
+  }
+}
+@media only screen and (max-width: 400px) {
+  .navbar-expand-md {
+    zoom:0.6;
+  }
+
+}
+
+@media only screen and (max-width: 300px) {
+  .containerMain {
+    display: none !important;
+  }
+
+}
+
+@media only screen and (max-width: 1024px) {
+  .navbar-collapse {
+    width:50% !important;
+  }
+}
+@media only screen and (max-width: 769px){
+.mojaklasa {
+    display:flex !important;
+}
 }
 .addPostContainer{
 background-color:#f8f8f8;
@@ -78,15 +284,12 @@ background-color:#f8f8f8;
 .RightDogWall{
   margin-top:20px;
 }
+
 .bttnADDPHOTO{
   margin-top:10px !important;
   margin:0 auto;
 }
-@media only screen and (max-width: 700px) {
-  .containerMain {
-    display:none;
-  }
-}
+
 .maxColor{
   font-size:17px;
   color:#eee;
@@ -229,7 +432,7 @@ a:hover{
       display: block;
       height: auto;
       max-width: -webkit-fill-available;
-      max-height: 300px;
+      max-height: 225px;
 
 }
 .black{
@@ -337,10 +540,7 @@ margin: 0 auto;
 display: block;
 border-radius: 44px;
 }
-.item-renderer input{
-  display:none !important;
 
-}
 .Pagination{
   padding-top: 20px;
   border-top: 1px solid #20262e;
@@ -399,6 +599,9 @@ border-radius: 44px;
   background-image:url("./dogbackground.png");
   padding-bottom:50px;
   padding-top:50px;
+}
+.MuiAppBar-colorPrimary{
+    background-color:	#5F7EA6 !important;
 }
 .profileCol{
 
@@ -477,8 +680,8 @@ text-align: center;
   font-family:serif !important;
 }
 .colItems{
-  margin-left: 20% !important;
-      margin-right: 20% !important;
+  margin-left: 40px !important;
+      margin-right: 40px !important;
       border: 1px solid gainsboro;
       border-radius: 10px !important;
       padding-top: 10px !important;
@@ -534,12 +737,90 @@ text-align: center;
     margin-left:0px;
   }
 }
+.noneColors{
+      background-color: transparent !important;
+    box-shadow: none !important;
+}
+.resetMargin{
+  background-color: transparent !important;
+margin-top: 5px !important;
+margin-bottom: 5px !important;
+box-shadow: none !important;
+}
+.dropdown-content{
+  width:200px !important;
+}
+.accRules{
+  margin-left: 10px !important;
+}
+.sendMessage{
+  margin-bottom: 20px;
+  padding-top:5px;
+  padding-bottom:5px;
+  padding-left:20px;
+  padding-right:20px;
+  font-size:18px;
+}
+.displayNone{
+  display:none !important;
+}
 @media only screen and (max-width: 1000px) {
+  .postImage{
+    margin-top:10px;
+  }
+  .postRow{
+    display:block !important;
+    margin:0 auto;
+  }
+
+  .detailsRed{
+    display:none;
+  }
+  .fastAcc{
+    padding-top:15px;
+  }
+  .postDetails{
+    padding-top:20px !important;
+  }
+  .eachTitle{
+    font-size:20px;
+  }
+
+  .ShareCol{
+    max-width: 100% !important;
+    margin-left: 0px !important;
+  }
+
   .postHeader {
     padding-top:0px !important;
   }
   .contactIMG{
     width:inherit !important;
+  }
+  .allFooter{
+    font-size:14px !important;
+  }
+  .PageContent{
+    font-size:14px !important;
+  }
+  input{
+    font-size:14px !important;
+  }
+  select{
+    font-size:14px !important;
+  }
+  .SearchEachPost{
+    width:calc(40%);
+  }
+}
+@media only screen and (max-width: 770px) {
+  .SearchEachPost{
+    width:calc(80%);
+  }
+}
+@media only screen and (max-width: 580px) {
+  .SearchEachPost{
+    width:calc(90%);
   }
 }
 @media only screen and (max-width: 400px) {
@@ -665,9 +946,7 @@ margin-bottom: 0px !important;
   .ShareCol{
     max-width:100%;
   }
-  .postRow{
-    margin-top:10px !important;
-  }
+
 
   .PostItems{
     margin-right:5px;
@@ -710,6 +989,7 @@ margin-bottom: 0px !important;
   .randomPostDisplay{
     width:100% !important;
     min-width: 100% !important;
+    padding-bottom: 10px !important;
     margin-bottom:15px;
   }
   .postShares{
@@ -724,7 +1004,21 @@ margin-bottom: 0px !important;
   font-size:16px;
   margin-top:10px;
 }
+ins{
+  margin-top:20px !important;
+  margin-bottom: 20px !important;
+}
+.google-auto-placed{
+  margin-top:20px !important;
+  margin-bottom: 20px !important;
+}
+.adsbygoogle{
+  height: auto !important;
+}
+.google-auto-placed{
+  height: auto !important;
 
+}
 @media only screen and (max-width: 450px) {
   .postHeader {
     margin-bottom:15px;
@@ -744,6 +1038,7 @@ box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
 padding-top:1px;
   background-color: #fff;
 height:100%;
+word-break: break-all;
 
 }
 .PostButtons{
@@ -820,12 +1115,16 @@ margin-bottom:0px !important;
   font-family: serif;
     font-weight: 400;
     font-size:22px;
+    letter-spacing: 1px;
     word-wrap: break-word;
     margin-top:10px;
+    padding-top: 25px;
+    border-top: 1px solid gainsboro;
     padding-bottom:3px;
-    padding-top:3px;
+
 
 }
+
 .postUserLast{
   text-align:center;
   font-family: serif;
@@ -841,9 +1140,7 @@ margin-bottom:0px !important;
   background-color:#fff;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
 }
-.postRow{
-  margin-top:50px;
-}
+
 .PostContainer{
   background-color:#f8f8f8;
 
@@ -856,9 +1153,7 @@ margin-bottom:0px !important;
   float:right;
   margin:5px;
 }
-.DescirptionCol{
-  margin-top:-110px;
-}
+
 #AddingPost{
   padding-left: 50px;
 padding-right: 50px;
@@ -902,6 +1197,13 @@ display:block;
   letter-spacing: 1px;
   color:black;
 }
+.addInput{
+  padding:20px;
+  width:800px;
+  margin:0 auto;
+  display:block;
+  margin-top:20px;
+}
 .navbar-brand{
   color:white !important;
 }
@@ -920,6 +1222,7 @@ display:block;
   margin-right:10px;
   margin-left:10px;
   font-weight: bold;
+  border-radius:999px;
   text-transform: uppercase;
   -webkit-text-fill-color: white;
 
@@ -968,9 +1271,13 @@ font-size: 20px;
 .mainImage{
   background-size:cover;
   margin:0 auto;
-  border-top:2px solid #F45355;
 
 
+
+}
+.logoCSS{
+  width:48px !important;
+  margin-right:20px;
 }
 .postMain{
 
@@ -983,6 +1290,29 @@ font-size: 20px;
 }
 #addPostTextArea{
   min-height:300px;
+}
+@media only screen and (min-width: 1000px) {
+  .btn-danger {
+    width:max-content !important;
+  }
+  .dropdown-content{
+    width:100% !important;
+  }
+}
+@media only screen and (max-width: 800px) {
+  .postShare{
+    font-size:16px !important;
+    margin-left:20px !important;
+  }
+  #removeAccount{
+    margin-bottom:20px;
+  }
+}
+.allWidth{
+  width:100% !important;
+}
+.PostContainer{
+  padding-bottom:50px;
 }
 .PostText{
   word-wrap: break-word;

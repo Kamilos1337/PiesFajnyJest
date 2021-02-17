@@ -5,13 +5,9 @@ import { Card, Row, Col, CardImg, CardText, CardBody,
   CardTitle, CardSubtitle, Button } from 'reactstrap';
   import Container from 'react-bootstrap/Container'
   import Badge from 'react-bootstrap/Badge'
-import Dog from './img/dog.png';
-import Map from './img/map.svg';
-import Arrow from './img/right-arrow.png';
-import LoadingDog from './img/LoadingDog.gif';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { BrowserRouter, Route, IndexRoute, Link } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
 
 
 export default class Post extends React.Component {
@@ -90,11 +86,11 @@ RightArrow(){
     items: 3,
   },
   tablet: {
-    breakpoint: { max: 1024, min: 464 },
+    breakpoint: { max: 1024, min: 770 },
     items: 2,
   },
   mobile: {
-    breakpoint: { max: 464, min: 0 },
+    breakpoint: { max: 770, min: 0 },
     items: 1,
   },
 };
@@ -105,13 +101,13 @@ RightArrow(){
       <Container className="marginTop50">
       <Row className="newPostsRow">
       <Col>
-      <h3 className="newPostsHeader"><img src={Arrow} className="LeftArrow" onClick={this.LeftArrow} alt="PiesFajnyJest.com najnowsze posty" />
+      <h3 className="newPostsHeader"><img src="/public/right-arrow.png" className="LeftArrow" onClick={this.LeftArrow} alt="PiesFajnyJest.com najnowsze posty" />
 Najnowsze posty <Badge variant="secondary" id="TEST">WSZYSTKIE</Badge>
-<img src={Arrow} className="RightArrow" onClick={this.RightArrow} alt="PiesFajnyJest.com najnowsze posty" />
+<img src="/public/right-arrow.png" className="RightArrow" onClick={this.RightArrow} alt="PiesFajnyJest.com najnowsze posty" />
 </h3>
       </Col>
       </Row>
-{  this.state.isLoading ? <div className="Loading"><img src={LoadingDog} alt="loading..." /><p>Ładowanie postów</p></div> :
+{  this.state.isLoading ? <div className="Loading"><img src="/public/LoadingDog.gif" className="LoadingDog" alt="loading..." /><p className="loadingText">Ładowanie postów</p></div> :
       <Carousel  swipeable={false}
       draggable={true}
       responsive={responsive}
@@ -126,18 +122,18 @@ Najnowsze posty <Badge variant="secondary" id="TEST">WSZYSTKIE</Badge>
   <Col  key={i}>
 
             <Card  className="postMain">
-              <CardImg  src={"./src/client/upload/"+this.state.MainPosts[item].photo} onError={(e)=>{e.target.onerror = null; e.target.src="/src/client/dog.png"}} className="postImg" alt="Zdjęcie postu na PiesFajnyJest" />
+              <CardImg  src={"./src/client/upload/"+this.state.MainPosts[item].photo} onError={(e)=>{e.target.onerror = null; e.target.src="/public/dog.png"}} className="postImg" alt="Zdjęcie postu na PiesFajnyJest" />
               <CardBody>
                 <CardTitle  className="postTitle">{this.state.MainPosts[item].title}</CardTitle>
                 <CardSubtitle  className="postTags">{this.state.MainPosts[item].category}</CardSubtitle>
                 <CardText >{this.state.MainPosts[item].description}</CardText>
                 <Row>
-                <CardImg  src={Map} className="mapImg mapInfos" alt="Card image cap" />
+                <CardImg  src="/public/map.svg" className="mapImg mapInfos" alt="Card image cap" />
                   <p className="mapPlace"> {this.state.MainPosts[item].voivodeship } </p>
 
 
                 </Row>
-                <Button className="postSubmit btn-danger"><Link to={this.state.MainPosts[item].link}>ZOBACZ OGŁOSZENIE</Link></Button>
+                <Button className="postSubmit btn-danger allWidth"><Link to={this.state.MainPosts[item].link}>ZOBACZ OGŁOSZENIE</Link></Button>
               </CardBody>
             </Card>
               </Col>

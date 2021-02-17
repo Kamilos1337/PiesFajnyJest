@@ -1,13 +1,10 @@
 import React from 'react';
-import {Container, Row, Col} from 'react-bootstrap'
 import Navbar100 from '../Navbar/Navbar100';
-import DogBackground from '../img/transparent.png';
-import addPhoto from '../img/addPhoto.png';
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-import Swipe from '../img/add-image.png';
+import {Container, Row, Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import Footer from '../footer'
+
 export default class InfoNav extends React.Component {
   constructor(props) {
     super(props);
@@ -99,7 +96,7 @@ export default class InfoNav extends React.Component {
          if(Error=="Za długi email"){
            NotificationManager.error("Podany email jest za długi. Aby spełniał nasze kryteria nie może zawierać więcej niż 30 znaków.", "Zły email!");
          }
-         
+
          if(Error=="Za krótki tytuł"){
            NotificationManager.error("Podany tytuł jest za krótki. Aby spełniał nasze kryteria musi zawierać minimum 6 znaków.", "Zły tytuł!");
          }
@@ -173,7 +170,7 @@ export default class InfoNav extends React.Component {
     };
 
     let {imagePreviewUrl} = this.state;
-   let $imagePreview = (<img className="displayImage" src={Swipe} />);
+   let $imagePreview = (<img className="displayImage" src="/public/add-image.png" />);
    if (imagePreviewUrl) {
      $imagePreview = (<img className="displayImage" src={imagePreviewUrl} />);
      document.getElementById("DodajZdjecie").innerText="Kliknij aby zmienić zdjęcie";
@@ -212,7 +209,7 @@ export default class InfoNav extends React.Component {
           <Col>
           <FormGroup>
            <Label className="formText" for="formText">Email *</Label>
-           <Input type="email" value={this.state.value} onChange={this.handleChange} name="email" id="email" value={this.state.value} onChange={this.handleChange} placeholder="Podaj kontaktowy adres email" />
+           <Input type="email" onChange={this.handleChange} name="email" id="email" value={this.state.value} onChange={this.handleChange} placeholder="Podaj kontaktowy adres email" />
          </FormGroup>
           </Col>
         </Row>

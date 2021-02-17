@@ -1,11 +1,21 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-
-const outputDirectory = 'dist';
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
+var nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   entry: ['babel-polyfill', './src/client/index.js'],
+  target: 'node', // in order to ignore built-in modules like path, fs, etc.
+  node: {
+   process: false,
+   global: false,
+   fs: "empty"
+ },
+  externals: [nodeExternals({
+   importType: 'umd'
+})],
+  mode: 'production',
   output: {
      path: path.resolve(__dirname, 'dist'),
      filename: 'bundle.js',
@@ -16,17 +26,13 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
+          loader: 'babel-loader',
         }
       },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
       },
-      {
-        test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg)$/,
-        loader: 'url-loader?limit=100000'
-      }
     ]
   },
   resolve: {
@@ -35,16 +41,23 @@ module.exports = {
   devServer: {
     port: 3000,
     historyApiFallback: true,
-    open: true,
+    contentBase: './',
+    hot: true,
     proxy: {
-      '/api': 'http://localhost:8080'
+      //'/': 'http://localhost:8080',
+      '/api': 'http://localhost:8080',
+      //'/src/client/upload': 'http://localhost:3000',
     }
   },
   plugins: [
-    new CleanWebpackPlugin([outputDirectory]),
+    new webpack.DefinePlugin({ // <-- key to reducing React's size
+     'process.env': {
+       'NODE_ENV': JSON.stringify('production')
+     }
+   }),
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './public/index.html',
-      favicon: './public/favicon.ico'
+      title: 'Production',
     })
   ]
 };

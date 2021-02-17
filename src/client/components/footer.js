@@ -1,7 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import ReactNotification from "react-notifications-component";
-import "react-notifications-component/dist/theme.css";
 import { Container, Row, Col } from 'reactstrap';
 import { IoLogoYoutube, IoLogoFacebook } from 'react-icons/io';
 import { FiInstagram } from 'react-icons/fi';
@@ -16,38 +14,36 @@ export default class User extends React.Component {
      render(props){
        return(
          <div className="footer">
-           <Container>
+           <Container className="allFooter">
              <Row className="footerRow">
                <Col>
 
-                <p><Link to="/konto">Profil</Link></p>
-                <p><Link to="#contact">Kontakt</Link></p>
+                <p><a href="/konto">Profil</a></p>
                 <p><Link to="/dodajpost">Dodaj ogłoszenie</Link></p>
                 <p><Link to="/posty/1">Zobacz ogłoszenia</Link></p>
                </Col>
 
                <Col>
-                <p><Link to="/regulamin.pdf">Regulamin</Link></p>
-                <p><Link to="/regulamin.pdf">Pomoc</Link></p>
-                <p><Link to="/regulamin.pdf">Polityka prywatności</Link></p>
+                <p><a href="/pomoc/regulamin.pdf" target="_blank">Regulamin</a></p>
+                <p><a href="/pomoc/polityka_prywatnosci.pdf" target="_blank">Polityka prywatności</a></p>
                </Col>
 
                <Col>
-               <p className="icon" href="https://www.facebook.com/IPIESFAJNYJEST/"> <IoLogoFacebook/> </p>
-
-
-               </Col>
-
-               <Col>
-
-               <p className="icon" href="https://www.instagram.com/imeandog"> <FiInstagram/> </p>
+               <p className="icon"><a target="_blank" href="https://www.facebook.com/IPIESFAJNYJEST/"><IoLogoFacebook/></a></p>
 
 
                </Col>
 
                <Col>
 
-               <p className="icon" href="https://www.youtube.com/channel/UCtxw386WzCdHjVP2L5mTV1Q"> <IoLogoYoutube/> </p>
+               <p className="icon"><a target="_blank" href="https://www.instagram.com/imeandog"><FiInstagram/></a></p>
+
+
+               </Col>
+
+               <Col>
+
+               <p className="icon" ><a target="_blank" href="https://www.youtube.com/channel/UCtxw386WzCdHjVP2L5mTV1Q"> <IoLogoYoutube/> </a></p>
 
                </Col>
 

@@ -3,14 +3,81 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 import Navbar100 from './Navbar/Navbar100';
 import Footer from './footer';
 import { Container, Row, Col, Input, FormGroup } from 'reactstrap';
-import Error404 from './img/sad-dog.png';
-import Share from './img/share.png';
-import Facebook from './img/Facebook.png';
-import LoadingDog from './img/LoadingDog.gif';
-import Twitter from './img/Twitter.png';
-import Swipe from './img/add-image.png';
-import { FacebookShareButton, FacebookShareCount, FacebookIcon } from 'react-share';
-import { FaDog, FaBone } from 'react-icons/fa';
+import { FacebookShareButton, FacebookShareCount, FacebookIcon, TwitterShareButton  } from 'react-share';
+import { FaDog, FaBone, FaCommentAlt } from 'react-icons/fa';
+
+
+
+
+function ShowNews(news) {
+  const News = news.news;
+  if(news.news.length>0){
+  const listNews = News.map((EachNews, i) =>
+  <div key={i}>
+  <Row>
+    <Col>
+        <FaBone className="trans90"/>
+    </Col>
+  </Row>
+  <Row>
+    <Col className="colItems">
+      <p><FaDog className="dogIcon"/> <span className="itemDate">{EachNews.created_at}</span></p>
+      <p className="textItems">{EachNews.newsText}</p>
+    </Col>
+  </Row>
+  </div>
+   );
+
+  return (
+    <div>
+    {listNews}
+    </div>
+  );
+}else{
+  return(
+    <div>
+      Brak aktualności!
+    </div>
+  );
+}
+}
+
+function ShowComments(comments) {
+    if(comments.comments.length>0){
+  const Comments = comments.comments;
+  const listNews = Comments.map((EachComment, i) =>
+  <div key={i}>
+  <Row className="EachComment">
+    <Col>
+      <Row>
+        <Col>
+          <span className="nameComments">{EachComment.commentsUserName}</span>
+        </Col>
+
+        <Col>
+          <span className="dateComments">{EachComment.created_at}</span>
+        </Col>
+      </Row>
+      <p className="PostText">{EachComment.commentsText}</p>
+    </Col>
+  </Row>
+  </div>
+   );
+
+
+  return (
+    <div>
+    {listNews}
+    </div>
+  );
+}else{
+  return (
+    <div className="text-center">
+    Brak komentarzy!
+    </div>
+  );
+}
+}
 
 export default class EachPost extends React.Component {
   constructor(props) {
@@ -32,9 +99,14 @@ export default class EachPost extends React.Component {
       addPhoto:"Zmień zdjęcie",
       imagePreviewUrl: '',
       file: '',
-      photoChanged:false
+      photoChanged:false,
+      addNewsText:"",
+      addCommentText:"",
+      AllNews:[],
+      AllComments:[]
      };
      this.facebookShare = this.facebookShare.bind(this);
+     this.twitterShare = this.twitterShare.bind(this);
      this.editProfile = this.editProfile.bind(this);
      this.handleChange = this.handleChange.bind(this);
      this.UploadPhoto = this.UploadPhoto.bind(this);
@@ -42,6 +114,8 @@ export default class EachPost extends React.Component {
      this.Cancel = this.Cancel.bind(this);
      this.SaveChanges = this.SaveChanges.bind(this);
      this.itemHandle = this.itemHandle.bind(this);
+     this.addNews = this.addNews.bind(this);
+     this.addComment = this.addComment.bind(this);
   }
 
   UploadPhoto(){
@@ -65,8 +139,12 @@ export default class EachPost extends React.Component {
     reader.readAsDataURL(file)
   }
 
+
+
   componentDidMount () {
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
     const { postPath } = this.props.match.params
+
     fetch('/api/showPost', {
     method: 'POST',
     headers: {
@@ -86,6 +164,7 @@ export default class EachPost extends React.Component {
     if(resp.Error=="Post nie istnieje lub został usunięty."){
         this.setState({noPosts:"Post nie istnieje lub został usunięty!"});
     }else{
+
       this.setState({
         CurrentPost:resp,
         EditTitle:resp.postTitle,
@@ -95,27 +174,58 @@ export default class EachPost extends React.Component {
         EditDesc: resp.postDescription,
         EditPhoto: resp.postPhoto,
       });
+      fetch('/api/facebookCounts', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        Link:resp.postLink
+      }),
+    })
+    .then(resp => resp.json())
+    .then(resp => {
+
+      this.setState({FacebookCounts:resp.FacebookCounts});
+
+      })
     }
 
     })
 
-    // Ilosc udostępnień posta
-    fetch('/api/facebookCounts', {
+    fetch('/api/showNews', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      Link:window.location.href
+      postPath:postPath
     }),
   })
   .then(resp => resp.json())
   .then(resp => {
-
-    this.setState({FacebookCounts:resp.FacebookCounts});
-
+    this.setState({AllNews:resp})
     })
+
+    fetch('/api/showComments', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      postPath:postPath
+    }),
+  })
+  .then(resp => resp.json())
+  .then(resp => {
+    this.setState({AllComments:resp})
+    })
+
+    // Ilosc udostępnień posta
+
 
     fetch('/api/randomPost', {
     method: 'POST',
@@ -136,9 +246,141 @@ export default class EachPost extends React.Component {
 
 
     })
+  }
 
 
 
+
+  addNews(){
+    const { postPath } = this.props.match.params
+     var date = new Date().getDate(); //Current Date
+     var month = new Date().getMonth() + 1; //Current Month
+     if(month<10){
+       month = "0"+month;
+     }
+     var year = new Date().getFullYear(); //Current Year
+     var hours = new Date().getHours(); //Current Hours
+     var min = new Date().getMinutes(); //Current Minutes
+     var sec = new Date().getSeconds(); //Current Seconds
+     var FullDate = date + "." + month + "." + year + " " + hours +":"+min;
+    fetch('/api/addNews', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      addNewsText: this.state.addNewsText,
+      emailUser: localStorage.getItem('userEmail'),
+      passUser: localStorage.getItem('userPass'),
+      nameUser:this.state.CurrentPost.postUserLogin,
+      link: this.state.CurrentPost.postLink,
+      created_at: FullDate
+    }),
+  })
+  .then(resp => resp.json())
+  .then(resp => {
+
+    if(resp.Error=="Nie udało się dodać newsa!"){
+      NotificationManager.error("Aby dowiedzieć się więcej skontaktuj się z nami!", "Nie udało się!")
+    }
+
+    if(resp.Error=="Za krótki text"){
+      NotificationManager.error("Podany tekst musi mieć minimum 6 znaków!", "Nie udało się!")
+    }
+
+    if(resp.Error=="Za długi text"){
+      NotificationManager.error("Podany tekst może mieć maksymalnie 1000 znaków!", "Nie udało się!")
+    }
+
+    if(resp.Success=="Udało się dodać newsa!"){
+      NotificationManager.success("Aktualność została dodana pomyślnie!", "Udało się!");
+      this.setState({addNewsText:""})
+      fetch('/api/showNews', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postPath:postPath
+      }),
+    })
+    .then(resp => resp.json())
+    .then(resp => {
+      this.setState({AllNews:resp})
+      })
+    }
+
+    }).catch(function() {
+      NotificationManager.error("Aby dodać aktualność musisz odczekać 30 minut.", "Nie udało się!")
+     });
+  }
+
+  addComment(){
+    const { postPath } = this.props.match.params
+     var date = new Date().getDate(); //Current Date
+     var month = new Date().getMonth() + 1; //Current Month
+     if(month<10){
+       month = "0"+month;
+     }
+     var year = new Date().getFullYear(); //Current Year
+     var hours = new Date().getHours(); //Current Hours
+     var min = new Date().getMinutes(); //Current Minutes
+     var sec = new Date().getSeconds(); //Current Seconds
+     var FullDate = date + "." + month + "." + year + " " + hours +":"+min;
+    fetch('/api/addComment', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      addCommentText: this.state.addCommentText,
+      emailUser: localStorage.getItem('userEmail'),
+      passUser: localStorage.getItem('userPass'),
+      nameUser:this.state.CurrentPost.postUserLogin,
+      link: this.state.CurrentPost.postLink,
+      created_at: FullDate
+    }),
+  })
+  .then(resp => resp.json())
+  .then(resp => {
+
+    if(resp.Error=="Nie udało się dodać komentarza!"){
+      NotificationManager.error("Aby dowiedzieć się więcej skontaktuj się z nami!", "Nie udało się!")
+    }
+
+    if(resp.Error=="Za krótki text"){
+      NotificationManager.error("Podany tekst musi mieć minimum 6 znaków!", "Nie udało się!")
+    }
+
+    if(resp.Error=="Za długi text"){
+      NotificationManager.error("Podany tekst może mieć maksymalnie 1000 znaków!", "Nie udało się!")
+    }
+
+    if(resp.Success=="Udało się dodać newsa!"){
+      NotificationManager.success("Komentarz został dodany pomyślnie!", "Udało się!");
+      this.setState({addCommentText:""})
+      fetch('/api/showComments', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postPath:postPath
+      }),
+    })
+    .then(resp => resp.json())
+    .then(resp => {
+      this.setState({AllComments:resp})
+      })
+    }
+
+    }).catch(function() {
+      NotificationManager.error("Aby dodać komentarz musisz odczekać 30 minut.", "Nie udało się!")
+     });
   }
 
   itemHandle(event){
@@ -152,6 +394,7 @@ export default class EachPost extends React.Component {
     document.getElementById("commentsSwitcher").classList.remove("itemBorder");
     document.getElementById(id).classList.add("itemBorder");
   }
+
   handleChange(event) {
     const target = event.target;
     var value = target.value;
@@ -196,7 +439,7 @@ export default class EachPost extends React.Component {
  })
  .then(resp => resp.json())
  .then(resp => {
-   console.log(resp);
+
        var Error = resp.Error;
        if(resp.NewRandomPhoto){
          this.setState({photo:resp.NewRandomPhoto})
@@ -240,8 +483,13 @@ export default class EachPost extends React.Component {
 
 
   facebookShare(){
-    document.getElementsByClassName("SocialMediaShareButton--facebook")[0].click();
+    document.getElementsByClassName("react-share__ShareButton")[0].click();
   }
+
+  twitterShare(){
+    document.getElementsByClassName("react-share__ShareButton")[1].click();
+  }
+
 
   editProfile(){
     this.setState({EditProfile:!this.state.EditProfile})
@@ -250,29 +498,31 @@ export default class EachPost extends React.Component {
   render(props) {
 
     let {imagePreviewUrl} = this.state;
-   let $imagePreview = (<img className="displayImage" src={Swipe} />);
+   let $imagePreview = (<img className="displayImage" src="/public/add-image.png" />);
    if (imagePreviewUrl) {
      $imagePreview = (<img className="displayImage" src={imagePreviewUrl} />);
      document.getElementById("DodajZdjecie").innerText="Kliknij aby zmienić zdjęcie";
    }
 
-
+   const AllNews = this.state.AllNews;
+   const AllComments = this.state.AllComments;
     return (
 
       <div className="PostContainer">
+
         <Navbar100/>
         {this.state.noPosts=="Post nie istnieje lub został usunięty!" ?
         <Container className="PostContainer">
           <Row>
             <Col className="notFound">
-            <img src={Error404} alt="Nie znaleziono posta!" />
+            <img src="/public/sad-dog.png" alt="Nie znaleziono posta!" />
             <p>{this.state.noPosts }</p>
             </Col>
           </Row>
         </Container>
         :
         <Container>
-          <Row className="postRow">
+          <Row className="postRow highTop">
             <Col className="ShareCol">
 
 
@@ -285,7 +535,7 @@ export default class EachPost extends React.Component {
                   <div>
                         {this.state.EditProfile==false ?
                           <div>
-                  <img className="postImage" src={"./src/client/upload/"+this.state.CurrentPost.postPhoto} onError={(e)=>{e.target.onerror = null; e.target.src="/src/client/dog.png" }}  alt="Zdjęcie postu na piesfajnyjest.com" />
+                  <img className="postImage" src={"./src/client/upload/"+this.state.CurrentPost.postPhoto} onError={(e)=>{e.target.onerror = null; e.target.src="/public/dog.png" }}  alt="Zdjęcie postu na piesfajnyjest.com" />
                     <Row className="postDetails">
                       <Col>
                    <p className="eachTitle">{this.state.EditTitle}</p>
@@ -328,7 +578,7 @@ export default class EachPost extends React.Component {
                         }
                    </div>
                   :
-                  <div className="Loading"><img src={LoadingDog} alt="loading..." /><p>Ładowanie postu</p></div>
+                  <div className="Loading"><img src="/public/LoadingDog.gif" alt="loading..." /><p>Ładowanie postu</p></div>
                 }
 
 
@@ -341,7 +591,7 @@ export default class EachPost extends React.Component {
             </Col>
 
             <Col className="colUser ShareCol">
-            <p className="redInfo">SZCZEGÓŁY</p>
+            <p className="redInfo detailsRed">SZCZEGÓŁY</p>
             <div className="colUserDiv">
             <p className="postUser">Dodano przez: <b>{this.state.CurrentPost.postUserLogin}</b></p>
 
@@ -411,6 +661,21 @@ export default class EachPost extends React.Component {
 
           </Row>
 
+          <Row className="postRow resetMargin">
+            <Col className="">
+              <div className="postHeader noneColors">
+                <ins className="adsbygoogle"
+                   style={{ display: 'block' }}
+                   data-ad-client="ca-pub-2708531917515904"
+                   data-ad-slot="7851653213"
+                   data-ad-format="auto"
+                   data-full-width-responsive="true"/>
+              </div>
+            </Col>
+
+          </Row>
+
+
           <Row className="postRow">
             <Col className="ShareCol">
             <div className="postHeader">
@@ -418,16 +683,17 @@ export default class EachPost extends React.Component {
                 <Col>
                   <p className="postShare">Pomóż udostępniając post!</p>
                   <div className="fbContainer">
-                  <img src={Facebook} onClick={this.facebookShare} className="facebookIcon" alt="Udostępnij PiesFajnyJest na facebooku!" />
-                  <img src={Twitter} className="twitterIcon" alt="Udostępnij PiesFajnyJest na facebooku!" />
+                  <img src="/public/Facebook.png" onClick={this.facebookShare} className="facebookIcon" alt="Udostępnij PiesFajnyJest na facebooku!" />
+                  <img src="/public/Twitter.png" onClick={this.twitterShare} className="twitterIcon" alt="Udostępnij PiesFajnyJest na facebooku!" />
                   </div>
 
 
                 </Col>
 
                 <Col>
-                <p className="postShare">Udostępnienia:</p>
-                <FacebookShareButton id="FacebookShare" url={"https://zrzutka.pl/2zasw9"}/>
+                <p className="postShare">Aktualna liczba udostępnień:</p>
+                <FacebookShareButton id="FacebookShare" url={"https://piesfajnyjest.com/"+this.state.CurrentPost.postLink}/>
+                <TwitterShareButton url={"https://piesfajnyjest.com/"+this.state.CurrentPost.postLink}/>
                   <p className="postShare2">{this.state.FacebookCounts}</p>
 
                 </Col>
@@ -443,17 +709,31 @@ export default class EachPost extends React.Component {
 
             {(this.state.RandomPost.RandomLink ? <div>
                 <div className="fbContainer">
-                <img className="SmallImage" src={"./src/client/upload/"+this.state.RandomPost.RandomPhoto} onError={(e)=>{e.target.onerror = null; e.target.src="/src/client/dog.png" }} alt="PiesFajnyJest zobacz również ten post!" />
+                <img className="SmallImage" src={"./src/client/upload/"+this.state.RandomPost.RandomPhoto} onError={(e)=>{e.target.onerror = null; e.target.src="/public/dog.png" }} alt="PiesFajnyJest zobacz również ten post!" />
               <p className="randomtitle">{this.state.RandomPost.RandomTitle}</p>
               <button className="mainCenterTextButton btn btn-danger"><a href={"/"+this.state.RandomPost.RandomLink}>Zobacz Post</a></button>
               </div>
               </div>
                 : <div>
-                  <div className="Loading"><img src={LoadingDog} alt="loading..." /><p>Ładowanie postu</p>
+                  <div className="Loading"><img src="/public/LoadingDog.gif" alt="loading..." /><p>Ładowanie postu</p>
                 </div>
               </div>
 
             )}
+              </div>
+            </Col>
+
+          </Row>
+
+          <Row className="postRow resetMargin">
+            <Col className="">
+              <div className="postHeader noneColors">
+                <ins className="adsbygoogle"
+                   style={{ display: 'block' }}
+                   data-ad-client="ca-pub-2708531917515904"
+                   data-ad-slot="4880308279"
+                   data-ad-format="auto"
+                   data-full-width-responsive="true"/>
               </div>
             </Col>
 
@@ -468,10 +748,10 @@ export default class EachPost extends React.Component {
                   <p className="postShare PostButtons leftItem itemBorder" id="descriptionSwitcher" onClick={this.itemHandle} >Opis</p>
                 </Col>
                 <Col className="PostItem">
-                  <p className="postShare PostButtons" id="newsSwitcher"onClick={this.itemHandle}>Aktualności<sup className="sup">12</sup></p>
+                  <p className="postShare PostButtons" id="newsSwitcher" onClick={this.itemHandle}>Aktualności<sup className="sup" id="newsSwitcher" onClick={this.itemHandle}>{this.state.AllNews.length}</sup></p>
                 </Col>
                 <Col className="PostItem">
-                  <p className="postShare PostButtons rightItem" id="commentsSwitcher" onClick={this.itemHandle} >Komentarze<sup className="sup">7</sup></p>
+                  <p className="postShare PostButtons rightItem" id="commentsSwitcher" onClick={this.itemHandle} >Komentarze<sup className="sup" id="commentsSwitcher" onClick={this.itemHandle}>{this.state.AllComments.length}</sup></p>
                 </Col>
               </Row>
 
@@ -500,59 +780,22 @@ export default class EachPost extends React.Component {
                     <div>
                     <Row className="AddNews">
                       <Col>
-                      <Input type="textarea" className="textareaNews" value="" placeholder="Napisz aktualność..." onChange={this.handleChange}  name="text"  />
+                      <Input type="textarea" id="addNewsText" className="textareaNews" value={this.state.addNewsText} placeholder="Napisz aktualność..." onChange={this.handleChange}  name="text"  />
 
                       </Col>
 
                     </Row>
                     <Row className="AddNews">
                     <Col className="buttonNews">
-                      <button className="NewButton">Dodaj aktualność</button>
+                      <button onClick={this.addNews} className="NewButton">Dodaj aktualność</button>
                     </Col>
                     </Row>
                     </div>
                     : null
                   }
 
-                    <Row>
-                      <Col className="colItems">
-                        <p><FaDog className="dogIcon"/> <span className="itemDate">19.10.2019</span></p>
-                        <p className="textItems">Prace idą pełną parą, jestesmy już bardzo blisko aby skończyć projekt </p>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                          <FaBone className="trans90"/>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col className="colItems">
-                        <p><FaDog className="dogIcon"/> <span className="itemDate">12.01.2019</span></p>
-                        <p className="textItems">Już prawie udało nam się skonczyć Prace idą pełną parą, jestesmy już bardzo blisko aby skończyć projekt </p>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                          <FaBone className="trans90"/>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col className="colItems">
-                        <p><FaDog className="dogIcon"/> <span className="itemDate">22.04.2019</span></p>
-                        <p className="textItems">Już prawie udało nam się skonczyć </p>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                          <FaBone className="trans90"/>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col className="colItems">
-                        <p><FaDog className="dogIcon"/> <span className="itemDate">12.05.2019</span></p>
-                        <p className="textItems">Prace idą pełną parą, jestesmy już bardzo blisko aby skończyć projekt </p>
-                      </Col>
-                    </Row>
+                      <ShowNews news={AllNews}/>
+
                   </div>
                   :
                   null
@@ -561,7 +804,23 @@ export default class EachPost extends React.Component {
                 {
                   this.state.CurrentItem=="commentsSwitcher" ?
                   <div>
-                    <p> asdastest</p>
+
+                    <div>
+                    <Row className="AddNews">
+                      <Col>
+                      <Input type="textarea" id="addCommentText" className="textareaNews" value={this.state.addCommentText} placeholder="Napisz komentarz..." onChange={this.handleChange}  name="text"  />
+
+                      </Col>
+
+                    </Row>
+                    <Row className="AddNews">
+                    <Col className="buttonNews">
+                      <button onClick={this.addComment} className="NewButton">Dodaj komentarz</button>
+                    </Col>
+                    </Row>
+                    </div>
+
+                    <ShowComments comments={AllComments}/>
                   </div>
                   :
                   null
@@ -575,7 +834,7 @@ export default class EachPost extends React.Component {
 
             </Col>
 
-            <Col className="colUser ShareCol randomPostDisplay">
+            <Col className="colUser ShareCol">
 
             </Col>
 
@@ -588,16 +847,16 @@ export default class EachPost extends React.Component {
                 <Col>
                   <p className="postShare">Pomóż udostępniając post!</p>
                   <div className="fbContainer">
-                  <img src={Facebook} onClick={this.facebookShare} className="facebookIcon" alt="Udostępnij PiesFajnyJest na facebooku!" />
-                  <img src={Twitter} className="twitterIcon" alt="Udostępnij PiesFajnyJest na facebooku!" />
+                  <img src="/public/Facebook.png" onClick={this.facebookShare} className="facebookIcon" alt="Udostępnij PiesFajnyJest na facebooku!" />
+                  <img src="/public/Twitter.png" onClick={this.twitterShare} className="twitterIcon" alt="Udostępnij PiesFajnyJest na facebooku!" />
                   </div>
 
 
                 </Col>
 
                 <Col>
-                <p className="postShare">Udostępnienia:</p>
-                <FacebookShareButton id="FacebookShare" url={"https://zrzutka.pl/2zasw9"}/>
+                <p className="postShare">Aktualna liczba udostępnień:</p>
+                <FacebookShareButton id="FacebookShare" url={"https://piesfajnyjest.com/"+this.state.CurrentPost.postLink}/>
                   <p className="postShare2">{this.state.FacebookCounts}</p>
 
                 </Col>
@@ -606,9 +865,9 @@ export default class EachPost extends React.Component {
             </div>
             </Col>
 
-            <Col className="SeeToo colUser ShareCol randomPostDisplay postHeader ">
+            <Col className="SeeToo colUser ShareCol postHeader ">
             <div className="fbContainer goTO">
-            <p className="postShare">Szybki dostęp:</p>
+            <p className="postShare fastAcc">Szybki dostęp:</p>
             <button className="mainCenterTextButton btn btn-danger marginTop20"><a href="/">Główna</a></button>
             <button className="mainCenterTextButton btn btn-danger marginTop20"><a href="/dodajpost">Dodaj Post</a></button>
 

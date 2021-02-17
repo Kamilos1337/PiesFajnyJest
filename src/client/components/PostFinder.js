@@ -1,16 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import ReactNotification from "react-notifications-component";
-import "react-notifications-component/dist/theme.css";
 import { Container, Row, Col, Button, Card, CardImg, CardBody, CardTitle, CardSubtitle, CardText } from 'reactstrap';
-import { IoLogoYoutube, IoLogoFacebook } from 'react-icons/io';
-import { FiInstagram } from 'react-icons/fi';
 import { Select, FormGroup, Label, Input } from 'reactstrap';
 import Navbar100 from './Navbar/Navbar100';
 import Footer from './footer';
 import MultiSelect from "@khanacademy/react-multi-select";
-import LoadingDog from './img/LoadingDog.gif';
-import Map from './img/map.svg';
+
+
 
 function ShowPagination(count) {
   const PostsCount = count.count;
@@ -79,18 +75,18 @@ function ShowPosts(posts){
 const content = posts.posts.map((post, i) =>
   <div key={i} className="SearchEachPost">
   <Card  className="postMain">
-    <CardImg  src={"../src/client/upload/"+post.photo} onError={(e)=>{e.target.onerror = null; e.target.src="/src/client/dog.png" }} className="postImg" alt="Zdjęcie postu na PiesFajnyJest" />
+    <CardImg  src={"../src/client/upload/"+post.photo} onError={(e)=>{e.target.onerror = null; e.target.src="/public/dog.png" }} className="postImg" alt="Zdjęcie postu na PiesFajnyJest" />
     <CardBody>
       <CardTitle  className="postTitle">{post.title}</CardTitle>
       <CardSubtitle  className="postTags">{post.category}</CardSubtitle>
       <CardText >{post.description}</CardText>
       <Row>
-      <CardImg  src={Map} className="mapImg mapInfos" alt="Województwo na piesfajnyjest.com" />
+      <CardImg  src="/public/map.svg" className="mapImg mapInfos" alt="Województwo na piesfajnyjest.com" />
         <p className="mapPlace"> {post.voivodeship } </p>
 
 
       </Row>
-      <Button className="postSubmit btn-danger"><Link to={post.link}>ZOBACZ OGŁOSZENIE</Link></Button>
+      <Button className="postSubmit btn-danger allWidth"><Link to={post.link}>ZOBACZ OGŁOSZENIE</Link></Button>
     </CardBody>
   </Card>
   </div>
@@ -120,9 +116,7 @@ export default class User extends React.Component {
   this.FindPosts = this.FindPosts.bind(this)
 }
 
-componentDidUpdate() {
 
-}
 
 
 componentDidMount () {
@@ -158,7 +152,7 @@ componentDidMount () {
       CurrentPosts:resp
     });
 }
-console.log(resp);
+
 
 
 
@@ -284,17 +278,11 @@ FindPosts(){
                                onSelectedChanged={Category => this.setState({Category})}
                                overrideStrings={{
                                selectSomeItems: "Wybierz kategorie",
-                               allItemsAreSelected: "Wszystkie kategorie",
-                               selectAll: "Wszystkie kategorie",
+                               allItemsAreSelected: "Wszystkie",
+                               selectAll: "Wszystkie",
                                search: "Znajdź w wyszukiwarce",
                            }}
                          />
-
-                         <Input type="select" value={this.state.value} onChange={this.handleChange}  id="NewOld" className="SelectFind" name="select">
-                             <option value="Najnowsze">Najnowsze</option>
-                             <option value="Najstarsze">Najstarsze</option>
-                           </Input>
-
                          <MultiSelect
                                 className="SelectFind"
                                options={VoivodeshipOptions}
@@ -302,11 +290,17 @@ FindPosts(){
                                onSelectedChanged={Voivodeship => this.setState({Voivodeship})}
                                overrideStrings={{
                                selectSomeItems: "Wybierz województwo",
-                               allItemsAreSelected: "Wszystkie województwa",
-                               selectAll: "Wszystkie województwa",
+                               allItemsAreSelected: "Wszystkie",
+                               selectAll: "Wszystkie",
                                search: "Znajdź w wyszukiwarce",
                            }}
                          />
+                         <Input type="select" value={this.state.value} onChange={this.handleChange}  id="NewOld" className="SelectFind" name="select">
+                             <option value="Najnowsze">Najnowsze</option>
+                             <option value="Najstarsze">Najstarsze</option>
+                           </Input>
+
+
 
 
 
@@ -318,7 +312,7 @@ FindPosts(){
             <Row className="SearchAllPosts">
               <Col>
               {
-                this.state.CurrentPosts.length>0 ? <ShowPosts posts={this.state.CurrentPosts}/> :   <div className="Loading"><img src={LoadingDog} alt="loading..." /><p>Poczekaj chwile! Już biegne po twoje posty.</p></div>
+                this.state.CurrentPosts.length>0 ? <ShowPosts posts={this.state.CurrentPosts}/> :   <div className="Loading"><img src="/public/LoadingDog.gif" alt="loading..." /><p>Poczekaj chwile! Już biegne po twoje posty.</p></div>
 
 
               }
